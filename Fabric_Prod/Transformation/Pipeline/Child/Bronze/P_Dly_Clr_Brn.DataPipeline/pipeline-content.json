@@ -1,0 +1,371 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "select SourceSchema, SourceTable, SourceColumnList, TargetTable \nfrom [DataOpsWarehouse].[Metadata].[Src_Brn_Tbl_Lst]\nwhere SourceSystem = 'CLR' and IsActive = 1",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "DataOpsWarehouse",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "37a392e9-5f52-4d2c-b6fa-06ea528b0158",
+                  "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-3imxqgpmfq6ezklkb7tcvyrqbm.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "197819da-2cec-4c3c-a96a-0fe62ae2300b"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lkp_Fetch_Tbl_Name",
+        "dependsOn": [
+          {
+            "activity": "SP_Started",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "batchCount": 4,
+          "items": {
+            "value": "@activity('Lkp_Fetch_Tbl_Name').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "OracleSource",
+                  "oracleReaderQuery": {
+                    "value": "@concat(\n    'SELECT ', item().SourceColumnList, ', ',\n    'CAST(''', pipeline().parameters.BatchID, ''' AS NUMBER(5,0)) AS BatchID, ',\n    'TO_DATE(''', pipeline().parameters.BatchDate, ''', ''YYYY-MM-DD'') AS BatchDate, ',\n    '''', pipeline().parameters.SystemCode, ''' AS SystemCode, ',\n    '''', pipeline().PipelineName, ''' AS WorkFlowName ',\n    'FROM ', item().SourceSchema, '.', item().SourceTable, ' A'\n)",
+                    "type": "Expression"
+                  },
+                  "queryTimeout": "02:00:00",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "OracleTable",
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "6ba89ba4-29a9-475b-afca-362ce4c2b190"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": {
+                        "value": "@item().TargetTable",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "BronzeLakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "578f481a-5e2e-a2b0-49d6-56e59c04cb09",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Cd_Orc_To_BrnLh",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Lp_Cd_Orc_To_BrnLh",
+        "dependsOn": [
+          {
+            "activity": "Lkp_Fetch_Tbl_Name",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[CFR].[Etl_Cntrl_SP]",
+          "storedProcedureParameters": {
+            "BatchKey": {
+              "value": {
+                "value": "@pipeline().parameters.BatchKey",
+                "type": "Expression"
+              },
+              "type": "Int32"
+            },
+            "TaskName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "BatchDate": {
+              "value": {
+                "value": "@pipeline().parameters.BatchDate",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "Status": {
+              "value": "Started",
+              "type": "String"
+            },
+            "BatchID": {
+              "value": {
+                "value": "@pipeline().parameters.BatchID",
+                "type": "Expression"
+              },
+              "type": "Int32"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "DataOpsWarehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "37a392e9-5f52-4d2c-b6fa-06ea528b0158",
+              "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-3imxqgpmfq6ezklkb7tcvyrqbm.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "197819da-2cec-4c3c-a96a-0fe62ae2300b"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SP_Started",
+        "dependsOn": []
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[CFR].[Etl_Cntrl_SP]",
+          "storedProcedureParameters": {
+            "BatchKey": {
+              "value": {
+                "value": "@pipeline().parameters.BatchKey",
+                "type": "Expression"
+              },
+              "type": "Int32"
+            },
+            "TaskName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "BatchDate": {
+              "value": {
+                "value": "@pipeline().parameters.BatchDate",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "Status": {
+              "value": "Succeeded",
+              "type": "String"
+            },
+            "BatchID": {
+              "value": {
+                "value": "@pipeline().parameters.BatchID",
+                "type": "Expression"
+              },
+              "type": "Int32"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "DataOpsWarehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "37a392e9-5f52-4d2c-b6fa-06ea528b0158",
+              "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-3imxqgpmfq6ezklkb7tcvyrqbm.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "197819da-2cec-4c3c-a96a-0fe62ae2300b"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SP_Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Lp_Cd_Orc_To_BrnLh",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[CFR].[Etl_Cntrl_SP]",
+          "storedProcedureParameters": {
+            "BatchKey": {
+              "value": {
+                "value": "@pipeline().parameters.BatchKey",
+                "type": "Expression"
+              },
+              "type": "Int32"
+            },
+            "TaskName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "BatchDate": {
+              "value": {
+                "value": "@pipeline().parameters.BatchDate",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "Status": {
+              "value": "Failed",
+              "type": "String"
+            },
+            "BatchID": {
+              "value": {
+                "value": "@pipeline().parameters.BatchID",
+                "type": "Expression"
+              },
+              "type": "Int32"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "DataOpsWarehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "37a392e9-5f52-4d2c-b6fa-06ea528b0158",
+              "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-3imxqgpmfq6ezklkb7tcvyrqbm.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "197819da-2cec-4c3c-a96a-0fe62ae2300b"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SP_Failed",
+        "dependsOn": [
+          {
+            "activity": "Lp_Cd_Orc_To_BrnLh",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "BatchKey": {
+        "type": "string"
+      },
+      "BatchDate": {
+        "type": "string"
+      },
+      "BatchID": {
+        "type": "string"
+      },
+      "WorkflowName": {
+        "type": "string",
+        "defaultValue": "P_Dly_Clr_Brn"
+      },
+      "SystemCode": {
+        "type": "string",
+        "defaultValue": "Clearing"
+      }
+    },
+    "variables": {
+      "Table_Name": {
+        "type": "String"
+      },
+      "Schema_Name": {
+        "type": "String"
+      },
+      "Column_Name": {
+        "type": "String"
+      },
+      "Target_Table": {
+        "type": "String"
+      }
+    }
+  }
+}

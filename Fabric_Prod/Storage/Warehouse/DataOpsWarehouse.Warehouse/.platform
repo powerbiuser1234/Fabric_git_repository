@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Warehouse",
+    "displayName": "DataOpsWarehouse"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "528b0158-06ea-b6fa-4d2c-5f5237a392e9"
+  }
+}

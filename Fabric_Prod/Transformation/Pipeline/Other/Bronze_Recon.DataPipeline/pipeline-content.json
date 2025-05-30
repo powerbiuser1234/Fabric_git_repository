@@ -1,0 +1,356 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8b66df03-b446-a8a0-4913-376ff6fab719",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Recon",
+        "dependsOn": []
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource"
+          },
+          "datasetSettings": {
+            "type": "LakehouseTable",
+            "typeProperties": {
+              "table": "cl_bronze_count_comparison"
+            },
+            "schema": [],
+            "linkedService": {
+              "name": "BronzeLakehouse",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "578f481a-5e2e-a2b0-49d6-56e59c04cb09",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Tables"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Recon_table",
+        "dependsOn": [
+          {
+            "activity": "Recon",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Recon_table').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "AppendVariable",
+              "typeProperties": {
+                "variableName": "tablerows",
+                "value": {
+                  "value": "@concat( '<tr><td>', string(item().table_name), '</td>','<td>', string(item().row_counts), '</td>', '<td>', string(item().distinct_row_counts), '</td>', '<td>', string(item().counts_difference),'</td></tr>' )",
+                  "type": "Expression"
+                }
+              },
+              "name": "Append variable1",
+              "dependsOn": []
+            },
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@equals(item().row_counts,0)",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "AppendVariable",
+                    "typeProperties": {
+                      "variableName": "zero_count",
+                      "value": {
+                        "value": "@concat( '<tr><td>', string(item().table_name), '</td>','<td>', string(item().row_counts), '</td>', '<td>', string(item().distinct_row_counts), '</td>', '<td>', string(item().counts_difference),'</td></tr>' )",
+                        "type": "Expression"
+                      }
+                    },
+                    "name": "Append variable2",
+                    "dependsOn": []
+                  }
+                ],
+                "ifFalseActivities": []
+              },
+              "name": "If Condition1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Row_iterator",
+        "dependsOn": [
+          {
+            "activity": "Recon_table",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Office365Outlook",
+        "typeProperties": {
+          "inputs": {
+            "body": {
+              "To": "rawbank.ops@blutechconsulting.com;safiullah.afzal@blutechconsulting.com;mujahid.haider@blutechconsulting.com",
+              "Subject": "Clearing - Bronze Tables Duplication check",
+              "Body": "<p>Hi Team,</p>\n<p>@{if(empty(activity('Recon_table').output.value),'<p>Batch not executed</p>',concat('<p> PFB Full row duplication recon</p>','<table border=\"1\">','<thead>','<tr>','<th>table_name</th>','<th>row_counts</th>','<th>distinct_row_counts</th>','<th>counts_difference</th>','</tr>','</thead>','<tbody>',join(variables('tablerows'),''),'</tbody>','</table>'))}</p>\n<p><br></p>\n<p><strong>Regards,</strong></p>\n<p><strong>MS-RawBank</strong></p>",
+              "Sensitivity": "",
+              "Importance": "Normal"
+            },
+            "method": "post",
+            "path": "/v2/Mail"
+          }
+        },
+        "name": "Office 365 Outlook1",
+        "dependsOn": [
+          {
+            "activity": "Row_iterator",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@greater(length(variables('zero_count')),0)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "Office365Outlook",
+              "typeProperties": {
+                "inputs": {
+                  "body": {
+                    "To": "rawbank.ops@blutechconsulting.com;safiullah.afzal@blutechconsulting.com;mujahid.haider@blutechconsulting.com",
+                    "Subject": "Clearing - Tables with zero counts",
+                    "Body": "<p>Hi Team,</p>\n<p>@{concat('<p> PFB tables with zero count</p>','<table border=\"1\">','<thead>','<tr>','<th>table_name</th>','<th>row_counts</th>','<th>distinct_row_counts</th>','<th>counts_difference</th>','</tr>','</thead>','<tbody>',join(variables('zero_count'),''),'</tbody>','</table>')}</p>\n<p><br></p>\n<p><strong>Regards,</strong></p>\n<p><strong>MS-RawBank</strong></p>",
+                    "Sensitivity": "",
+                    "Importance": "Normal"
+                  },
+                  "method": "post",
+                  "path": "/v2/Mail"
+                }
+              },
+              "name": "Office 365 Outlook2",
+              "dependsOn": []
+            }
+          ],
+          "ifFalseActivities": [
+            {
+              "type": "Office365Outlook",
+              "typeProperties": {
+                "inputs": {
+                  "body": {
+                    "To": "rawbank.ops@blutechconsulting.com;safiullah.afzal@blutechconsulting.com;mujahid.haider@blutechconsulting.com",
+                    "Subject": "Clearing - Zero Check Successful",
+                    "Body": "<p>Hi Team,</p>\n<p><br></p>\n<p>All tables populated. Zero Count check successfull</p>\n<p><br></p>\n<p><strong>Regards,</strong></p>\n<p><strong>MS-RawBank</strong></p>",
+                    "Sensitivity": "",
+                    "Importance": "Normal"
+                  },
+                  "method": "post",
+                  "path": "/v2/Mail"
+                }
+              },
+              "name": "Office 365 Outlook3",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "If Condition2",
+        "dependsOn": [
+          {
+            "activity": "Row_iterator",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "813e090a-40a8-9a18-4387-12c1310e5c1b",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "zero_count_check": {
+              "value": "",
+              "type": "int"
+            },
+            "fldup_check": {
+              "value": "",
+              "type": "int"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "quality_checks",
+        "dependsOn": [
+          {
+            "activity": "If Condition2",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Office 365 Outlook1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "quality_status",
+          "value": "@activity('quality_checks').output.result.exitValue"
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "quality variable",
+        "dependsOn": [
+          {
+            "activity": "quality_checks",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(variables('quality_status'),'pass')",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "Office365Outlook",
+              "typeProperties": {
+                "inputs": {
+                  "body": {
+                    "To": "rawbank.ops@blutechconsulting.com;safiullah.afzal@blutechconsulting.com;mujahid.haider@blutechconsulting.com",
+                    "Subject": "Clearing - Data Quality Checks Successful",
+                    "Body": "<p>Hi Team<br>\n<br>\nNo Full row duplications or zero counts found in clearing bronze layer tables.<br>\nClearing bronze layer Data Quality checks successful<br>\n<br>\n<strong>Regards,<br>\nMS-RawBank</strong></p>",
+                    "Sensitivity": "",
+                    "Importance": "Normal"
+                  },
+                  "method": "post",
+                  "path": "/v2/Mail"
+                }
+              },
+              "name": "Office 365 Outlook4",
+              "dependsOn": []
+            }
+          ],
+          "ifFalseActivities": [
+            {
+              "type": "Office365Outlook",
+              "typeProperties": {
+                "inputs": {
+                  "body": {
+                    "To": "rawbank.ops@blutechconsulting.com;safiullah.afzal@blutechconsulting.com;mujahid.haider@blutechconsulting.com",
+                    "Subject": "Clearing - Data Quality Check Failed",
+                    "Body": "<p>Hi Team,<br>\n<br>\nFull row duplications or zero counts found in clearing bronze layer tables.<br>\nClearing bronze layer Data Quality checks unsuccessful. Please review pipeline<br>\n<br>\nRegards,<br>\nMS-RawBank</p>",
+                    "Sensitivity": "",
+                    "Importance": "Normal"
+                  },
+                  "method": "post",
+                  "path": "/v2/Mail"
+                }
+              },
+              "name": "Office 365 Outlook5",
+              "dependsOn": []
+            },
+            {
+              "type": "Fail",
+              "typeProperties": {
+                "message": "Full duplication or zero counts in tables",
+                "errorCode": "DQ100"
+              },
+              "name": "Fail1",
+              "dependsOn": [
+                {
+                  "activity": "Office 365 Outlook5",
+                  "dependencyConditions": [
+                    "Completed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "If Condition3",
+        "dependsOn": [
+          {
+            "activity": "quality variable",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "tablerows": {
+        "type": "Array"
+      },
+      "zero_count": {
+        "type": "Array"
+      },
+      "zero_count_check": {
+        "type": "Integer"
+      },
+      "quality_status": {
+        "type": "String"
+      }
+    }
+  }
+}
