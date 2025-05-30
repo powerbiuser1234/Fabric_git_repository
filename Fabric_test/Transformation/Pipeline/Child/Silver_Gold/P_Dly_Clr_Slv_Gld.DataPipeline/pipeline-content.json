@@ -1,0 +1,489 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[CFR].[Etl_Cntrl_SP]",
+          "storedProcedureParameters": {
+            "BatchDate": {
+              "value": {
+                "value": "@pipeline().parameters.BatchDate",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "BatchID": {
+              "value": {
+                "value": "@pipeline().parameters.BatchID",
+                "type": "Expression"
+              },
+              "type": "Int16"
+            },
+            "BatchKey": {
+              "value": {
+                "value": "@pipeline().parameters.BatchKey",
+                "type": "Expression"
+              },
+              "type": "Int16"
+            },
+            "Status": {
+              "value": "Started",
+              "type": "String"
+            },
+            "TaskName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "DataOpsWarehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "ef274073-91f1-4ae5-b0bb-f18cea99d35f",
+              "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-7cxsut6lirwupac3dsk6jbvpba.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "4f2aaff8-44cb-476d-805b-1c95e486af08"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SP_Started",
+        "dependsOn": []
+      },
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(true, true)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "c1a58fb2-bb31-aab1-4fb7-b1d149525711",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txf_Clr_Slv_ClearingDim",
+              "dependsOn": []
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "82d59d05-e010-88ae-449b-4e367a7befe7",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txm_Clr_Gld_ClearingDim",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txf_Clr_Slv_ClearingDim",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "f2827354-c30a-8c51-4b38-0ec0c2044e76",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txh_Clr_Gld_ClearingDim_H",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txm_Clr_Gld_ClearingDim",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "b4ebe1e3-9155-9a7f-4546-d16178120fe4",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txf_Clr_Slv_ClearingFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txh_Clr_Gld_ClearingDim_H",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "01e8e8e5-1791-b0e7-4079-721b87707b0e",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txi_Clr_Gld_ClearingFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txf_Clr_Slv_ClearingFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "06db0820-25e1-883c-4f9a-3d280fdabcdc",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txf_Clr_Slv_ClearingCommFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txi_Clr_Gld_ClearingFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "324bdb15-922c-af58-451d-fcc1e02c98e4",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txi_Clr_Gld_ClearingCommFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txf_Clr_Slv_ClearingCommFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "c62d17c7-aa2d-85f1-4d10-ed9c20f34928",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txf_Clr_Slv_ClearingErrFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txi_Clr_Gld_ClearingFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "7ecae17d-ee7d-ade5-411f-3d5bfdd046ac",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txi_Clr_Gld_ClearingErrFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txf_Clr_Slv_ClearingErrFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "1314a2a7-e6e5-bfcc-4b12-7e787bc6046c",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txf_Clr_Slv_ClearingEventFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txi_Clr_Gld_ClearingFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "3db605a7-5e93-bce8-4f16-4caa566ec9b6",
+                "workspaceId": "00000000-0000-0000-0000-000000000000"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Nb_Txi_Clr_Gld_ClearingEventFact",
+              "dependsOn": [
+                {
+                  "activity": "Nb_Txf_Clr_Slv_ClearingEventFact",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ],
+          "ifFalseActivities": []
+        },
+        "name": "IfElse_Always_True",
+        "dependsOn": [
+          {
+            "activity": "SP_Started",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[CFR].[Etl_Cntrl_SP]",
+          "storedProcedureParameters": {
+            "BatchDate": {
+              "value": {
+                "value": "@pipeline().parameters.BatchDate",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "BatchID": {
+              "value": {
+                "value": "@pipeline().parameters.BatchID",
+                "type": "Expression"
+              },
+              "type": "Int16"
+            },
+            "BatchKey": {
+              "value": {
+                "value": "@pipeline().parameters.BatchKey",
+                "type": "Expression"
+              },
+              "type": "Int16"
+            },
+            "Status": {
+              "value": "Failed",
+              "type": "String"
+            },
+            "TaskName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "DataOpsWarehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "ef274073-91f1-4ae5-b0bb-f18cea99d35f",
+              "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-7cxsut6lirwupac3dsk6jbvpba.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "4f2aaff8-44cb-476d-805b-1c95e486af08"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SP_Failed",
+        "dependsOn": [
+          {
+            "activity": "IfElse_Always_True",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[CFR].[Etl_Cntrl_SP]",
+          "storedProcedureParameters": {
+            "BatchDate": {
+              "value": {
+                "value": "@pipeline().parameters.BatchDate",
+                "type": "Expression"
+              },
+              "type": "Datetime"
+            },
+            "BatchID": {
+              "value": {
+                "value": "@pipeline().parameters.BatchID",
+                "type": "Expression"
+              },
+              "type": "Int16"
+            },
+            "BatchKey": {
+              "value": {
+                "value": "@pipeline().parameters.BatchKey",
+                "type": "Expression"
+              },
+              "type": "Int16"
+            },
+            "Status": {
+              "value": "Succeeded",
+              "type": "String"
+            },
+            "TaskName": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "DataOpsWarehouse",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "ef274073-91f1-4ae5-b0bb-f18cea99d35f",
+              "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-7cxsut6lirwupac3dsk6jbvpba.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "4f2aaff8-44cb-476d-805b-1c95e486af08"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SP_Succeeded",
+        "dependsOn": [
+          {
+            "activity": "IfElse_Always_True",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "BatchKey": {
+        "type": "string"
+      },
+      "BatchDate": {
+        "type": "string"
+      },
+      "BatchID": {
+        "type": "string"
+      },
+      "WorkflowName": {
+        "type": "string",
+        "defaultValue": "P_Dly_Clr_Slv_Gld"
+      },
+      "SystemCode": {
+        "type": "string",
+        "defaultValue": "Clearing"
+      }
+    }
+  }
+}
