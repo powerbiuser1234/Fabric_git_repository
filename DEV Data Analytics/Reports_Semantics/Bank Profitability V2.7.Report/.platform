@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Bank Profitability V2.7"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "89fa979f-8802-af92-4cd6-e16c23141558"
+  }
+}
