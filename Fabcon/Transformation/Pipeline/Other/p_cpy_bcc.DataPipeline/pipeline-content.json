@@ -1,0 +1,135 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "OracleSource",
+            "oracleReaderQuery": "Select\nBRANCH,\nNEW_CHAP,\nACCOUNT,\nDEV,\ncast(DEBIT as decimal(38,4)) as DEBIT ,\ncast(CREDIT as decimal(38,4)) as CREDIT ,\ncast(DEVISE_RATE as decimal (38,4)) as DEVISE_RATE,\ncast(DEBIT_USD as decimal(38,4)) as DEBIT_USD ,\ncast(CREDIT_USD as decimal(38,4)) as CREDIT_USD \n\nfrom \nDMUSER.TB_BCC_CR",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "OracleTable",
+              "schema": [],
+              "externalReferences": {
+                "connection": "a23a0b80-71a5-497c-93c6-a9a5dc7a9f7d"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "tb_bcc"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "DataflowsStagingLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "c1ce1a4b-cb45-44a8-8d61-d78a6716b900",
+                    "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "select * from [CRM_DEV].[dbo].[AccountFact_BCC_20250430]",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "AzureSqlTable",
+              "typeProperties": {
+                "database": "ReportDevelopment"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "4ed00865-158f-4775-8cc0-7e06425a8e42"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "AccountFact_BCC_20250430"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "DataflowsStagingLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "6716b900-d78a-8d61-44a8-cb45c1ce1a4b",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data2",
+        "dependsOn": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "temp_server43_paritioncolumnslist1"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BronzeLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a43617b8-dd1a-46c9-aa3c-c2645e30c949",
+                    "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": {
+              "value": "Overwrite",
+              "type": "Expression"
+            },
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Temp_Server43_ParitionColumnsList"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BronzeLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a43617b8-dd1a-46c9-aa3c-c2645e30c949",
+                    "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "OWNER",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "OWNER1",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "NAME",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "NAME",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "OBJECT_TYPE",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "OBJECT_TYPE",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "COLUMN_NAME",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "COLUMN_NAME",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "COLUMN_POSITION",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 18,
+                  "precision": 38
+                },
+                "sink": {
+                  "name": "COLUMN_POSITION",
+                  "physicalType": "decimal",
+                  "scale": 18,
+                  "precision": 38
+                }
+              },
+              {
+                "source": {
+                  "name": "COLLATED_COLUMN_ID",
+                  "type": "Decimal",
+                  "physicalType": "decimal",
+                  "scale": 18,
+                  "precision": 38
+                },
+                "sink": {
+                  "name": "COLLATED_COLUMN_ID",
+                  "physicalType": "decimal",
+                  "scale": 18,
+                  "precision": 38
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": false,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "OracleSource",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "OracleTable",
+              "typeProperties": {
+                "schema": "RAWBK05100",
+                "table": "BKCOMPENS_AF"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "6ba89ba4-29a9-475b-afca-362ce4c2b190"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "test"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BronzeLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data2",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "OracleSource",
+            "oracleReaderQuery": "SELECT  IDRV, NORD, ETA, PROG, CREJ, CMOT, MOT, NORDEVE, UTI, DCO, DCOM, DCRE, HCRE\nFROM RAWBK05100.BKCOMPENS_RV_ETA",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "OracleTable",
+              "schema": [],
+              "externalReferences": {
+                "connection": "6ba89ba4-29a9-475b-afca-362ce4c2b190"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "SAMPLE2"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BronzeLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a43617b8-dd1a-46c9-aa3c-c2645e30c949",
+                    "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data3",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": []
+      }
+    ]
+  }
+}

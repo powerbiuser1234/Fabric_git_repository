@@ -1,0 +1,797 @@
+{
+  "name": "{{Dataset_Name}}",
+  "compatibilityLevel": 1604,
+  "model": {
+    "name": "{{Dataset_Name}}",
+    "culture": "en-US",
+    "collation": "Latin1_General_100_BIN2_UTF8",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "FILE_SHARE_AUDITS",
+        "sourceLineageTag": "[dbo].[FILE_SHARE_AUDITS]",
+        "columns": [
+          {
+            "name": "Requirement_details",
+            "dataType": "string",
+            "sourceColumn": "Requirement_details",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Requirement_details",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Requirement_documents",
+            "dataType": "string",
+            "sourceColumn": "Requirement_documents",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Requirement_documents",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "File_shared",
+            "dataType": "string",
+            "sourceColumn": "File_shared",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "File_shared",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approver_Email",
+            "dataType": "string",
+            "sourceColumn": "Approver_Email",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Approver_Email",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approver_comment",
+            "dataType": "string",
+            "sourceColumn": "Approver_comment",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Approver_comment",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Submitted_time",
+            "dataType": "dateTime",
+            "sourceColumn": "Submitted_time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Submitted_time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approval_time",
+            "dataType": "dateTime",
+            "sourceColumn": "Approval_time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Approval_time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Status",
+            "dataType": "string",
+            "sourceColumn": "Status",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Status",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Request_ID",
+            "dataType": "string",
+            "sourceColumn": "Request_ID",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Request_ID",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Requester_Email",
+            "dataType": "string",
+            "sourceColumn": "Requester_Email",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Requester_Email",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Requester_Dept",
+            "dataType": "string",
+            "sourceColumn": "Requester_Dept",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Requester_Dept",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Data_custodian",
+            "dataType": "string",
+            "sourceColumn": "Data_custodian",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Data_custodian",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Provisioning_time",
+            "dataType": "dateTime",
+            "sourceColumn": "Provisioning_time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Provisioning_time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "FILE_SHARE_AUDITS",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "USER_BRANCH",
+        "sourceLineageTag": "[dbo].[USER_BRANCH]",
+        "columns": [
+          {
+            "name": "USERNAME",
+            "dataType": "string",
+            "sourceColumn": "USERNAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "USERNAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "BRANCHCODE",
+            "dataType": "string",
+            "sourceColumn": "BRANCHCODE",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "BRANCHCODE",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ROLENAME",
+            "dataType": "string",
+            "sourceColumn": "ROLENAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "ROLENAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "USER_BRANCH",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "USER_BRANCH_AUDIT",
+        "sourceLineageTag": "[dbo].[USER_BRANCH_AUDIT]",
+        "columns": [
+          {
+            "name": "Username",
+            "dataType": "string",
+            "sourceColumn": "Username",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Username",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Branch_Code",
+            "dataType": "string",
+            "sourceColumn": "Branch_Code",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Branch_Code",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Role_Name",
+            "dataType": "string",
+            "sourceColumn": "Role_Name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Role_Name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Status",
+            "dataType": "string",
+            "sourceColumn": "Status",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Status",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Submitted_Time",
+            "dataType": "dateTime",
+            "sourceColumn": "Submitted_Time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Submitted_Time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Updated_Time",
+            "dataType": "dateTime",
+            "sourceColumn": "Updated_Time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Updated_Time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approver_Email",
+            "dataType": "string",
+            "sourceColumn": "Approver_Email",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Approver_Email",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approver_Comment",
+            "dataType": "string",
+            "sourceColumn": "Approver_Comment",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Approver_Comment",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "USER_BRANCH_AUDIT",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "USER_REGION",
+        "sourceLineageTag": "[dbo].[USER_REGION]",
+        "columns": [
+          {
+            "name": "USERNAME",
+            "dataType": "string",
+            "sourceColumn": "USERNAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "USERNAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "REGIONNAME",
+            "dataType": "string",
+            "sourceColumn": "REGIONNAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "REGIONNAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ROLENAME",
+            "dataType": "string",
+            "sourceColumn": "ROLENAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "ROLENAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "USER_REGION",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "USER_REGION_AUDIT",
+        "sourceLineageTag": "[dbo].[USER_REGION_AUDIT]",
+        "columns": [
+          {
+            "name": "Username",
+            "dataType": "string",
+            "sourceColumn": "Username",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Username",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Region_Name",
+            "dataType": "string",
+            "sourceColumn": "Region_Name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Region_Name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Role_Name",
+            "dataType": "string",
+            "sourceColumn": "Role_Name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Role_Name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Status",
+            "dataType": "string",
+            "sourceColumn": "Status",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Status",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Submitted_Time",
+            "dataType": "dateTime",
+            "sourceColumn": "Submitted_Time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Submitted_Time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Updated_Time",
+            "dataType": "dateTime",
+            "sourceColumn": "Updated_Time",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "Updated_Time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approver_Email",
+            "dataType": "string",
+            "sourceColumn": "Approver_Email",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Approver_Email",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Approver_Comment",
+            "dataType": "string",
+            "sourceColumn": "Approver_Comment",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Approver_Comment",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "USER_REGION_AUDIT",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "USER_SEGMENT",
+        "sourceLineageTag": "[dbo].[USER_SEGMENT]",
+        "columns": [
+          {
+            "name": "USERNAME",
+            "dataType": "string",
+            "sourceColumn": "USERNAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "USERNAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "SEGMENTCODE",
+            "dataType": "string",
+            "sourceColumn": "SEGMENTCODE",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "SEGMENTCODE",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ROLENAME",
+            "dataType": "string",
+            "sourceColumn": "ROLENAME",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "ROLENAME",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "USER_SEGMENT",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "user_region_new",
+        "sourceLineageTag": "[dbo].[user_region_new]",
+        "columns": [
+          {
+            "name": "Username",
+            "dataType": "string",
+            "sourceColumn": "Username",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Username",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Region_Name",
+            "dataType": "string",
+            "sourceColumn": "Region_Name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Region_Name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Role_Name",
+            "dataType": "string",
+            "sourceColumn": "Role_Name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Role_Name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Status",
+            "dataType": "string",
+            "sourceColumn": "Status",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "Status",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "user_region_new",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DatabaseQuery",
+        "kind": "m",
+        "expression": "let\n    database = {{TDS_Endpoint}}\nin\n    database\n"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "SourceLineageTagType",
+        "value": "DatabaseFullyQualifiedName"
+      }
+    ]
+  }
+}

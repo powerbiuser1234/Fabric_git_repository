@@ -1,0 +1,81 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Copy data1",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "DataOpsWarehouse",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-wqpazyi3cm4ednfmxduxxnlhqu.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "2ddbf62f-7b5f-4b8f-8ae5-b3a671772f92",
+                    "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "CFR",
+                "table": "BatchInfo"
+              }
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "DataOpsWarehouse",
+                "properties": {
+                  "annotations": [],
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-7cxsut6lirwupac3dsk6jbvpba.datawarehouse.fabric.microsoft.com",
+                    "artifactId": "ef274073-91f1-4ae5-b0bb-f18cea99d35f",
+                    "workspaceId": "4f2aaff8-44cb-476d-805b-1c95e486af08"
+                  }
+                }
+              },
+              "type": "DataWarehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "CFR",
+                "table": "BatchInfo"
+              }
+            }
+          },
+          "enableStaging": true,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

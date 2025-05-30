@@ -1,0 +1,70 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "select AGE,CLI,EVE,ORD,AVE,NORD,cast(DCO as Date) DCO,TEXTE,COD_MES,MONTANT,DEVMNT,ETAPVAL,UTI,HSAI,ANVA,NOVA,TEXT2,BatchID,BatchDATE,SystemCode,WorkflowName\nfrom LandingDatabase.dbo.BKPRTHIS\nwhere cast(DCO as date) >= '2025-01-01' and cast(DCO as date) < '2025-04-23'",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "AzureSqlTable",
+              "typeProperties": {
+                "database": "LandingDatabase"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "713b9390-3daf-4135-b804-c2d3395ca8a9"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "CBS_Bkprthis"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BronzeLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data1",
+        "dependsOn": []
+      }
+    ]
+  }
+}

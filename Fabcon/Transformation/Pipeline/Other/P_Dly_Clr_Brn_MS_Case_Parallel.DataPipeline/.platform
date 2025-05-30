@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "P_Dly_Clr_Brn_MS_Case_Parallel"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7ef86194-2fff-80ac-454d-ef47f7f94938"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "select \nAGE,\nDEV,\nNCP,\nSUF,\nDCO,\nOPE,\nMVT,\nSER,\nDVA,\nDIN,\nMON,\nSEN,\nLIB,\nEXO,\nPIE,\nDES1,\nDES2,\nDES3,\nDES4,\nDES5,\nUTI,\nUTF,\nUTA,\nEVE,\nAGEM,\ncast(DAG AS DATE) DAG,\nNCC,\nSUC,\nCPL,\nDDL,\nRLET,\nUTL,\nMAR,\nDECH,\nAGSA,\nAGDE,\nDEVC,\nMCTV,\nPIEO,\nIDEN,\nNOSEQ,\nDEXA,\nMODU,\nREFDOS,\nLABEL,\nNAT,\nETA,\n[SCHEMA],\nCETICPT,\nFUSION,\nBATCHID,\nBATCHDATE,\nCREATEDON,\nSYSTEMCODE,\nWORKFLOWNAME,\nROWHASH from LandingDatabase.dbo.BKHIS_BULK\nwhere cast(DAG as date) = '2025-04-22'",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "AzureSqlTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "BKHIS_BULK",
+                "database": "LandingDatabase"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "713b9390-3daf-4135-b804-c2d3395ca8a9"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "CBS_Bkhis"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "BronzeLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data1",
+        "dependsOn": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8337a6c4-84df-b40c-425f-60da4a3da0ba",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txf_Clr_Slv_ClearingDim",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "9e05d554-a692-ac03-4b37-eb4493127781",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txm_Clr_Gld_ClearingDim",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txf_Clr_Slv_ClearingDim",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "c68c613e-f84b-9d4f-417f-70ecb1dda47f",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txh_Clr_Gld_ClearingDim_H",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txm_Clr_Gld_ClearingDim",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "01c8d7d0-5c45-b787-4b59-1dc8c41868fa",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txf_Clr_Slv_ClearingFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txh_Clr_Gld_ClearingDim_H",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "6267e870-bf50-a9b0-4539-276f878a3553",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txi_Clr_Gld_ClearingFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txf_Clr_Slv_ClearingFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "33b4a062-5afd-aab7-4168-1c83d4825c7d",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txf_Clr_Slv_ClearingCommFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txi_Clr_Gld_ClearingFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "f5e6d856-64c4-81ba-4a1e-f8ec4adcda12",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txi_Clr_Gld_ClearingCommFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txf_Clr_Slv_ClearingCommFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "5d65398f-7f14-8a0c-407c-a7d32e3e667e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txf_Clr_Slv_ClearingErrFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txi_Clr_Gld_ClearingFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "d1b60df6-2604-98a3-4587-1a3baa619910",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txi_Clr_Gld_ClearingErrFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txf_Clr_Slv_ClearingErrFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "945288ac-8e1f-9f33-4589-17172a703d04",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txf_Clr_Slv_ClearingEventFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txi_Clr_Gld_ClearingFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "597e1a14-7b40-a07d-4b34-0f32e731c420",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Nb_Txi_Clr_Gld_ClearingEventFact",
+        "dependsOn": [
+          {
+            "activity": "Nb_Txf_Clr_Slv_ClearingEventFact",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

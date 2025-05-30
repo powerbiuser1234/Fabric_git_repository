@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "P_Dly_Clr_Brn_Talha"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0e3f4fdb-b486-bf2b-45b0-17b5436c5084"
+  }
+}

@@ -1,0 +1,559 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource"
+          },
+          "datasetSettings": {
+            "type": "LakehouseTable",
+            "typeProperties": {
+              "table": "Mtd_Src_Brn_Tbl_Lst"
+            },
+            "schema": [],
+            "linkedService": {
+              "name": "BronzeLakehouse",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Tables"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lkp_Fetch_Tbl_Names",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Filter1').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "AzureSqlSource",
+                  "sqlReaderQuery": {
+                    "value": "@concat(\n    'SELECT ', variables('Column_Name'), ', ',\n    'CAST(', pipeline().parameters.batch_id, ' AS NUMERIC(5,0)) AS BatchID, ',\n    'CAST(''', pipeline().parameters.batch_date, ''' AS DATE) AS BatchDate, ',\n    '''', pipeline().parameters.systemcode, ''' AS SystemCode, ',\n    '''',pipeline().PipelineName, ''' AS WorkFlowName ',\n    'FROM [', variables('Schema_Name'), '].[', variables('Table_Name'), ']'\n)",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "AzureSqlTable",
+                    "typeProperties": {
+                      "schema": "dbo",
+                      "table": "QBC_BKGESTIONNAIRE",
+                      "database": "LandingDatabase"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "713b9390-3daf-4135-b804-c2d3395ca8a9"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": {
+                        "value": "@concat('Cbs_', variables('Target_Table'))",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "Lakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "e56ddaf5-2e15-4634-91cc-e2eb818afa61",
+                          "workspaceId": "f1bde452-2399-41bc-9ba5-b3c078a190fc",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Cd_Orc_To_BrnLh",
+              "dependsOn": [
+                {
+                  "activity": "table_name",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "schema_name",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "column_name",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "targetSchema",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "targetTable",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Table_Name",
+                "value": {
+                  "value": "@item().TableName",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "table_name",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Schema_Name",
+                "value": {
+                  "value": "@item().SchemaName",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "schema_name",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Column_Name",
+                "value": {
+                  "value": "@item().ColumnNames",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "column_name",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Target_Schema",
+                "value": {
+                  "value": "@item().TargetSchema",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "targetSchema",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Target_Table",
+                "value": {
+                  "value": "@item().TargetTable",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "targetTable",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Lp_Cd_Orc_To_BrnLh",
+        "dependsOn": [
+          {
+            "activity": "Filter1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Office365Outlook",
+        "typeProperties": {
+          "inputs": {
+            "body": {
+              "To": "talha.sarwar@blutechconsulting.com",
+              "Subject": "Fb_P_Dly_Clr_Brn: Success",
+              "Body": "<p>@{pipeline().TriggerTime}</p>\n<p>@{pipeline().PipelineName}</p>\n<p>Fb_P_Dly_Clr_Brn: Success</p>",
+              "Sensitivity": "",
+              "Importance": "Normal"
+            },
+            "method": "post",
+            "path": "/v2/Mail"
+          }
+        },
+        "name": "Office 365 Outlook1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Lp_Cd_Orc_To_BrnLh",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Office365Outlook",
+        "typeProperties": {
+          "inputs": {
+            "body": {
+              "To": "talha.sarwar@blutechconsulting.com",
+              "Subject": "Fb_P_Dly_Clr_Brn: Fail",
+              "Body": "<p>@{pipeline().PipelineName}</p>\n<p>@{pipeline().TriggerTime}</p>\n<p>Fb_P_Dly_Clr_Brn: Fail</p>",
+              "Sensitivity": "",
+              "Importance": "Normal"
+            },
+            "method": "post",
+            "path": "/v2/Mail"
+          }
+        },
+        "name": "Office 365 Outlook2",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Lp_Cd_Orc_To_BrnLh",
+            "dependencyConditions": [
+              "Succeeded",
+              "Skipped"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Filter",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Lkp_Fetch_Tbl_Names').output.value",
+            "type": "Expression"
+          },
+          "condition": {
+            "value": "@and(\n    equals(item().IsActive, true),\n    equals(item().SourceSystem, 'CBS')\n)\n",
+            "type": "Expression"
+          }
+        },
+        "name": "Filter1",
+        "dependsOn": [
+          {
+            "activity": "Lkp_Fetch_Tbl_Names",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "select \r\nAGE,\r\nDEV,\r\nNCP,\r\nSUF,\r\nDCO,\r\nOPE,\r\nMVT,\r\nSER,\r\nDVA,\r\nDIN,\r\nMON,\r\nSEN,\r\nLIB,\r\nEXO,\r\nPIE,\r\nDES1,\r\nDES2,\r\nDES3,\r\nDES4,\r\nDES5,\r\nUTI,\r\nUTF,\r\nUTA,\r\nEVE,\r\nAGEM,\r\ncast(DAG AS DATE) DAG,\r\nNCC,\r\nSUC,\r\nCPL,\r\nDDL,\r\nRLET,\r\nUTL,\r\nMAR,\r\nDECH,\r\nAGSA,\r\nAGDE,\r\nDEVC,\r\nMCTV,\r\nPIEO,\r\nIDEN,\r\nNOSEQ,\r\nDEXA,\r\nMODU,\r\nREFDOS,\r\nLABEL,\r\nNAT,\r\nETA,\r\n[SCHEMA],\r\nCETICPT,\r\nFUSION,\r\nBATCHID,\r\nBATCHDATE,\r\nCREATEDON,\r\nSYSTEMCODE,\r\nWORKFLOWNAME,\r\nROWHASH \r\nfrom LandingDatabase.dbo.BKHIS",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "AzureSqlTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "BKHIS",
+                "database": "LandingDatabase"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "713b9390-3daf-4135-b804-c2d3395ca8a9"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Cbs_Bkhis"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "Lakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "e56ddaf5-2e15-4634-91cc-e2eb818afa61",
+                    "workspaceId": "f1bde452-2399-41bc-9ba5-b3c078a190fc",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Cd_AzMi_To_CBS_Bkhis",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "Select IDEN,NOSEQ,ORD,LIB,LANG,CAST(DAG as DATE) DAG,BATCH_ID,BATCH_DATE,SYSTEMCODE,WORKFLOWNAME from LandingDatabase.dbo.BKHISL\nwhere cast(DAG as date) = cast(GETDATE() -1 as date)",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "AzureSqlTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "BKHIS",
+                "database": "LandingDatabase"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "713b9390-3daf-4135-b804-c2d3395ca8a9"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Cbs_Bkhisl"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "Lakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "e56ddaf5-2e15-4634-91cc-e2eb818afa61",
+                    "workspaceId": "f1bde452-2399-41bc-9ba5-b3c078a190fc",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Cd_AzMi_To_CBS_Bkhisl",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "select AGE,CLI,EVE,ORD,AVE,NORD,cast(DCO as Date) DCO,TEXTE,COD_MES,MONTANT,DEVMNT,ETAPVAL,UTI,HSAI,ANVA,NOVA,TEXT2,BatchID,BatchDATE,SystemCode,WorkflowName\nfrom LandingDatabase.dbo.BKPRTHIS\nwhere cast(DCO as date) = cast(GETDATE() -1 as date)",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "AzureSqlTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "BKHIS",
+                "database": "LandingDatabase"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "713b9390-3daf-4135-b804-c2d3395ca8a9"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Cbs_Bkprthis"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "Lakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "e56ddaf5-2e15-4634-91cc-e2eb818afa61",
+                    "workspaceId": "f1bde452-2399-41bc-9ba5-b3c078a190fc",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Cd_AzMi_To_CBS_Bkprthis",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "batch_date": {
+        "type": "string",
+        "defaultValue": "2025-05-21"
+      },
+      "batch_id": {
+        "type": "string",
+        "defaultValue": "297"
+      },
+      "workflowname": {
+        "type": "string",
+        "defaultValue": "P_Dly_Cbs_Brn"
+      },
+      "systemcode": {
+        "type": "string",
+        "defaultValue": "Cbs"
+      }
+    },
+    "variables": {
+      "Table_Name": {
+        "type": "String"
+      },
+      "Schema_Name": {
+        "type": "String"
+      },
+      "Column_Name": {
+        "type": "String"
+      },
+      "Target_Schema": {
+        "type": "String"
+      },
+      "Target_Table": {
+        "type": "String"
+      }
+    }
+  }
+}

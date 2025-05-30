@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Zawar_test"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "43dc0481-e4d9-93f2-4dbb-5d999be3044c"
+  }
+}

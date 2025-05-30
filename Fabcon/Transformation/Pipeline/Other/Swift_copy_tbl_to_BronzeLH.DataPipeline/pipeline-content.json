@@ -1,0 +1,162 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Lkp_Fetch_Tbl_Name').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "OracleSource",
+                  "oracleReaderQuery": {
+                    "value": "@concat(\n    'SELECT ', item().SourceColumnList, ', ',\n    'CAST(''', pipeline().parameters.BatchID, ''' AS NUMBER(5,0)) AS BatchID, ',\n    'TO_DATE(''', pipeline().parameters.BatchDate, ''', ''YYYY-MM-DD'') AS BatchDate, ',\n    '''', pipeline().parameters.SystemCode, ''' AS SystemCode, ',\n    '''', pipeline().PipelineName, ''' AS WorkFlowName ',\n    'FROM ', item().SourceSchema, '.', item().SourceTable, ' A'\n)",
+                    "type": "Expression"
+                  },
+                  "queryTimeout": "02:00:00",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "OracleTable",
+                    "typeProperties": {
+                      "schema": "RAWBK05100",
+                      "table": "BKDOMOPI"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "6ba89ba4-29a9-475b-afca-362ce4c2b190"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": {
+                        "value": "@item().TargetTable",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "BronzeLakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Cd_Orc_To_BrnLh",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Lp_Cd_Orc_To_BrnLh",
+        "dependsOn": [
+          {
+            "activity": "Lkp_Fetch_Tbl_Name",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": {
+              "value": "select SourceSchema, SourceTable, SourceColumnList, TargetTable \nfrom [DataOpsWarehouse].[Metadata].[Src_Brn_Tbl_Lst]\nwhere SourceSystem = 'CBS' and IsActive = 1",
+              "type": "Expression"
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "DataOpsWarehouse",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "2ddbf62f-7b5f-4b8f-8ae5-b3a671772f92",
+                  "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-wqpazyi3cm4ednfmxduxxnlhqu.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lkp_Fetch_Tbl_Name",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "BatchID": {
+        "type": "string"
+      },
+      "BatchDate": {
+        "type": "string"
+      },
+      "SystemCode": {
+        "type": "string"
+      },
+      "WorkflowName": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "TableName": {
+        "type": "String"
+      },
+      "SchemaName": {
+        "type": "String"
+      }
+    }
+  }
+}

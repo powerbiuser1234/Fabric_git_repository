@@ -1,0 +1,283 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Copy data1",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "OracleSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "OracleTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": "WALLET",
+                "table": "CMS_LINKED_ACCOUNT"
+              },
+              "externalReferences": {
+                "connection": "c81e40c0-19d9-479a-b22d-32f0a6494e1d"
+              }
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "Lakehouse",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "f1bde452-2399-41bc-9ba5-b3c078a190fc",
+                    "artifactId": "e56ddaf5-2e15-4634-91cc-e2eb818afa61",
+                    "rootFolder": "Tables"
+                  }
+                }
+              },
+              "type": "LakehouseTable",
+              "schema": [],
+              "typeProperties": {
+                "table": "Cms_Linked_Account"
+              }
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "ID",
+                  "type": "Decimal"
+                },
+                "sink": {
+                  "name": "ID",
+                  "physicalType": "decimal"
+                }
+              },
+              {
+                "source": {
+                  "name": "ACC_NUMBER",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "ACC_NUMBER",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "ACC_TITLE",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "ACC_TITLE",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "TYPE",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "TYPE",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CURRENCY",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "CURRENCY",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "AVAILABLE_BALANCE",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "AVAILABLE_BALANCE",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "ACTUAL_BALANCE",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "ACTUAL_BALANCE",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CUSTOMER_ID",
+                  "type": "Decimal"
+                },
+                "sink": {
+                  "name": "CUSTOMER_ID",
+                  "physicalType": "decimal"
+                }
+              },
+              {
+                "source": {
+                  "name": "BRANCH_ID",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "BRANCH_ID",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "STATUS",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "STATUS",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "LASTUPDATEDATE",
+                  "type": "DateTime"
+                },
+                "sink": {
+                  "name": "LASTUPDATEDATE",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "CREATEDATE",
+                  "type": "DateTime"
+                },
+                "sink": {
+                  "name": "CREATEDATE",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "PRODUCT_ID",
+                  "type": "Decimal"
+                },
+                "sink": {
+                  "name": "PRODUCT_ID",
+                  "physicalType": "decimal"
+                }
+              },
+              {
+                "source": {
+                  "name": "ACC_LEVEL",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "ACC_LEVEL",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "UPGRADE_DATE",
+                  "type": "DateTime"
+                },
+                "sink": {
+                  "name": "UPGRADE_DATE",
+                  "physicalType": "timestamp"
+                }
+              },
+              {
+                "source": {
+                  "name": "CATEGORY",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "CATEGORY",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "ISPRIMARY",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "ISPRIMARY",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "ACCT_ID",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "ACCT_ID",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CARD_ID",
+                  "type": "Decimal"
+                },
+                "sink": {
+                  "name": "CARD_ID",
+                  "physicalType": "decimal"
+                }
+              },
+              {
+                "source": {
+                  "name": "USER_ID",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "USER_ID",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "EXT_PRODUCT_CODE",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "EXT_PRODUCT_CODE",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

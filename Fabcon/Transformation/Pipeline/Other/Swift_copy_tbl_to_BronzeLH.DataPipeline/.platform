@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Swift_copy_tbl_to_BronzeLH"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3ce2a92d-c742-a6ab-44ac-5f46a6b8fa99"
+  }
+}

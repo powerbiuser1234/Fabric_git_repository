@@ -1,0 +1,153 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "ClearingSK"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "GoldLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "2bb6944e-4021-92bc-40d5-eca9ef516724",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Append",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "ClearingSK"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "GoldLakehouse",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "2e2c9b55-5b79-4ca1-880c-bf0b64fd0495",
+                    "workspaceId": "197819da-2cec-4c3c-a96a-0fe62ae2300b",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data1",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "CFR",
+                "table": "BatchInfo"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "DataOpsWarehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "2ddbf62f-7b5f-4b8f-8ae5-b3a671772f92",
+                    "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-wqpazyi3cm4ednfmxduxxnlhqu.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "e10c1eb4-131b-4138-b4ac-b8e97bb56785"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "CFR",
+                "table": "BatchInfo"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "DataOpsWarehouse",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "37a392e9-5f52-4d2c-b6fa-06ea528b0158",
+                    "endpoint": "dbtrkqqvnfdejjsbkquee7f3ja-3imxqgpmfq6ezklkb7tcvyrqbm.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "197819da-2cec-4c3c-a96a-0fe62ae2300b"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy data1_copy1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": []
+      }
+    ]
+  }
+}

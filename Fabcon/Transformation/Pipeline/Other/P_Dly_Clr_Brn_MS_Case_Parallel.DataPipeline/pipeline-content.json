@@ -1,0 +1,285 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource"
+          },
+          "datasetSettings": {
+            "type": "LakehouseTable",
+            "typeProperties": {
+              "table": "Mtd_Clr_Brn_Tbl_Lst"
+            },
+            "schema": [],
+            "linkedService": {
+              "name": "BronzeLakehouse",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Tables"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lkp_Fetch_Tbl_Names",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "batchCount": 4,
+          "items": {
+            "value": "@activity('Lkp_Fetch_Tbl_Names').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "OracleSource",
+                  "oracleReaderQuery": {
+                    "value": "@concat(\n    'SELECT ', variables('Column_Name'), ', ',\n    'CAST(''', pipeline().parameters.batch_id, ''' AS NUMBER(5,0)) AS BatchID, ',  \n    'TO_DATE(''', pipeline().parameters.batch_date, ''', ''YYYY-MM-DD'') AS BatchDate, ',  \n    '''', pipeline().parameters.systemcode, ''' AS SystemCode, ',\n    '''', pipeline().PipelineName, ''' AS WorkFlowName ',\n    'FROM ', variables('Schema_Name'), '.', variables('Table_Name'), ' A'\n)\n",
+                    "type": "Expression"
+                  },
+                  "queryTimeout": "02:00:00",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "OracleTable",
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "6ba89ba4-29a9-475b-afca-362ce4c2b190"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": {
+                        "value": "@concat('TEMP_', variables('Table_Name'))\n",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "BronzeLakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "5e30c949-c264-aa3c-46c9-dd1aa43617b8",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 1,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Cd_Orc_To_BrnLh",
+              "dependsOn": [
+                {
+                  "activity": "table_name",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "schema_name",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "column_name",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Table_Name",
+                "value": {
+                  "value": "@item().tableName",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "table_name",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Schema_Name",
+                "value": {
+                  "value": "@item().schemaName",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "schema_name",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "Column_Name",
+                "value": {
+                  "value": "@item().columnNames",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "column_name",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Lp_Cd_Orc_To_BrnLh",
+        "dependsOn": [
+          {
+            "activity": "Lkp_Fetch_Tbl_Names",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Office365Outlook",
+        "typeProperties": {
+          "inputs": {
+            "body": {
+              "To": "talha.sarwar@blutechconsulting.com",
+              "Subject": "Fb_P_Dly_Clr_Brn: Success",
+              "Body": "<p>@{pipeline().TriggerTime}</p>\n<p>@{pipeline().PipelineName}</p>\n<p>Fb_P_Dly_Clr_Brn: Success</p>",
+              "Sensitivity": "",
+              "Importance": "Normal"
+            },
+            "method": "post",
+            "path": "/v2/Mail"
+          }
+        },
+        "name": "Office 365 Outlook1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Lp_Cd_Orc_To_BrnLh",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Office365Outlook",
+        "typeProperties": {
+          "inputs": {
+            "body": {
+              "To": "talha.sarwar@blutechconsulting.com",
+              "Subject": "Fb_P_Dly_Clr_Brn: Fail",
+              "Body": "<p>@{pipeline().PipelineName}</p>\n<p>@{pipeline().TriggerTime}</p>\n<p>Fb_P_Dly_Clr_Brn: Fail</p>",
+              "Sensitivity": "",
+              "Importance": "Normal"
+            },
+            "method": "post",
+            "path": "/v2/Mail"
+          }
+        },
+        "name": "Office 365 Outlook2",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Lp_Cd_Orc_To_BrnLh",
+            "dependencyConditions": [
+              "Succeeded",
+              "Skipped"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "batch_date": {
+        "type": "string",
+        "defaultValue": "2025-03-29"
+      },
+      "batch_id": {
+        "type": "string",
+        "defaultValue": "297"
+      },
+      "workflowname": {
+        "type": "string",
+        "defaultValue": "P_Dly_Clr_Brn"
+      },
+      "systemcode": {
+        "type": "string",
+        "defaultValue": "Clearing"
+      }
+    },
+    "variables": {
+      "Table_Name": {
+        "type": "String"
+      },
+      "Schema_Name": {
+        "type": "String"
+      },
+      "Column_Name": {
+        "type": "String"
+      }
+    }
+  }
+}
