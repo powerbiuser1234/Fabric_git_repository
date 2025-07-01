@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Balance Comptes Corresp Bank old"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c2292e9a-c1a6-9d52-4851-fead583a13b9"
+  }
+}
