@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Dataflow",
+    "displayName": "Nostro_DataFlow"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e87bd5cd-ae4e-ad95-4874-713fbe128e1f"
+  }
+}
