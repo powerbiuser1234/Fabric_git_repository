@@ -1,0 +1,70 @@
+expression Parameter1 = #"Sample File" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: cfd37300-85c2-4487-80e2-e5724953f135
+	queryGroup: 'Transform File from Profitability\Helper Queries'
+
+expression 'Sample File' =
+		let
+		    Source = Folder.Files("\\Phpfsbrtn01\Bureautique\Public\Data Analytics\8. Test case\Profitability"),
+		    Navigation1 = Source{0}[Content]
+		in
+		    Navigation1
+	lineageTag: d982c681-d6e2-4778-b4cb-8a17b22e9fd7
+	queryGroup: 'Transform File from Profitability\Helper Queries'
+
+expression 'Transform File' =
+		let
+		    Source = (Parameter1 as binary) => let
+		    Source = Excel.Workbook(Parameter1, null, true),
+		    #"Export Worksheet_Sheet" = Source{[Item="Export Worksheet",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Export Worksheet_Sheet", [PromoteAllScalars=true])
+		in
+		    #"Promoted Headers"
+		in
+		    Source
+	lineageTag: 9b0acb06-d6a1-4585-bb35-e2131f6fc61f
+	queryGroup: 'Transform File from Profitability\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression RangeStart = #datetime(2024, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, ExpressionIdentifier=#"Query2 (2)", Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 7f75b520-3658-4ed5-ba6a-0bc1ce01da3f
+
+	annotation PBI_ResultType = DateTime
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression RangeEnd = #datetime(2024, 1, 22, 0, 0, 0) meta [IsParameterQuery=true, ExpressionIdentifier=Query2, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: df0b80f7-4b2e-42af-b07d-037f522acc42
+
+	annotation PBI_ResultType = DateTime
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression RangeStart_1 = #datetime(2023, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 570dfec5-f4fb-4166-b0d1-ef7cbe4ed532
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+expression RangeEnd_1 = #datetime(2023, 6, 30, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: bdf4c625-4343-47f1-9aee-81c7734f726b
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+expression RangeStart_2 = #datetime(2023, 7, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: dec18aca-1cd4-4af4-825b-e469e001fdb5
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+expression RangeEnd_2 = #datetime(2023, 12, 31, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 8490e487-2e6b-4348-b04b-cc296eafe7e4
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+

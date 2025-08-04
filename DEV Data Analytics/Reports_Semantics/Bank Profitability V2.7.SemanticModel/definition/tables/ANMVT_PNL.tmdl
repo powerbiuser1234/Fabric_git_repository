@@ -1,0 +1,798 @@
+table ANMVT_PNL
+	lineageTag: abb1bcac-fecc-4a81-a708-6912fee00b83
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: year
+		rollingWindowPeriods: 2
+		incrementalGranularity: month
+		incrementalPeriods: 1
+		sourceExpression =
+			let
+			   Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true]),
+			    DMUSER = Source{[Schema="DMUSER"]}[Data],
+			    ANMVT_PNL_PNB_CLI_PROF_MONTHLY = DMUSER{[Name="ANMVT_PNL_PNB_CLI_PROF_MONTHLY"]}[Data],
+			    #"Added Custom" = Table.AddColumn(ANMVT_PNL_PNB_CLI_PROF_MONTHLY, "Client_Net_7", each ([CREDIT]-[DEBIT])),
+			    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Clint_Net_6", each [DEBIT]-[CREDIT]),
+			    #"Added Custom2" = Table.AddColumn(#"Added Custom1", "Client_Net", each [Client_Net_7]+[Clint_Net_6]),
+			    #"Added Custom5" = Table.AddColumn(#"Added Custom2", "Month", each Date.From([MONTH_PERIOD])),
+			    #"Added Custom3" = Table.AddColumn(#"Added Custom5", "Region", each [ZONE]),
+			    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom3",{{"Month", type datetime}}),
+			    #"Added Custom4" = Table.AddColumn(#"Changed Type", "Composant", each [COMPOSANT_3]),
+			    #"Filtered Rows" = Table.SelectRows(#"Added Custom4", each [Month] >= RangeStart and [Month] < RangeEnd)
+			in
+			    #"Filtered Rows"
+			
+			///let
+			 ///   Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select * from dmuser.anmvt_pnl_pnb_cli_prof "]),
+			///    #"Renamed Columns" = Table.RenameColumns(Source,{{"ZONE", "Region"}, {"COMPOSANT_3", "Composant"}}),
+			 ///   #"Inserted First Characters" = Table.AddColumn(#"Renamed Columns", "First Characters", each Text.Start([NCP], 1), type text),
+			 ///   #"Renamed Columns1" = Table.RenameColumns(#"Inserted First Characters",{{"First Characters", "Class"}}),
+			 ///   #"Added Custom" = Table.AddColumn(#"Renamed Columns1", "Client_Net_7", each ([CREDIT]-[DEBIT])),
+			 ///   #"Added Custom1" = Table.AddColumn(#"Added Custom", "Clint_Net_6", each [DEBIT]-[CREDIT]),
+			 ///   #"Added Custom2" = Table.AddColumn(#"Added Custom1", "Client_Net", each [Client_Net_7]+[Clint_Net_6]),
+			 ///   #"Duplicated Column" = Table.DuplicateColumn(#"Added Custom2", "PERIOD", "PERIOD - Copy"),
+			 ///   #"Changed Type" = Table.TransformColumnTypes(#"Duplicated Column",{{"PERIOD - Copy", type date}}),
+			 ///   #"Renamed Columns2" = Table.RenameColumns(#"Changed Type",{{"PERIOD - Copy", "Month"}}),
+			 ///   #"Merged Queries" = Table.NestedJoin(#"Renamed Columns2", {"CLI"}, EMP_EMPL, {"CLI"}, "EMP_EMPL", JoinKind.LeftOuter),
+			///    #"Expanded EMP_EMPL" = Table.ExpandTableColumn(#"Merged Queries", "EMP_EMPL", {"CLI", "EMP", "BKEMPL_CLI_NAME", "EMP_ID", "EMPLOYER_CLI"}, {"EMP_EMPL.CLI", "EMP_EMPL.EMP", "EMP_EMPL.BKEMPL_CLI_NAME", "EMP_EMPL.EMP_ID", "EMP_EMPL.EMPLOYER_CLI"})
+			///in
+			///    #"Expanded EMP_EMPL"
+
+	measure PNB = [Revenue]-[Charges]
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 4c3c24d0-4afe-4e00-bd8b-54ae43759d9f
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Last Month' = FORMAT(MAX(ANMVT_PNL[PERIOD]),"mmm yyyy")
+		lineageTag: 821a4065-95f1-4c1b-913c-bdfb0b69c98f
+
+	measure 'PNB 2022 average per CLI' =
+			
+			AVERAGEX(KEEPFILTERS(VALUES('ANMVT_PNL'[CLI])), CALCULATE(sum(ANMVT_PNL[Net_Profit])))
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 14fb8fdf-d1cb-44f4-9c8d-738663687393
+
+		extendedProperty MeasureTemplate =
+				{
+				  "version": 0,
+				  "daxTemplateName": "AveragePerCategory"
+				}
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Charges 2023 EOD' = CONCATENATE(TRUNC((CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="INTERETS CREDITEURS",year(ANMVT_PNL[Month])=2023)+CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="CHARGES LIEES AUX COMMISSIONS",year(ANMVT_PNL[Month])=2023))/1000000,2),"M")
+		lineageTag: 20d128f0-9bad-44c4-bbef-0a056dde6494
+
+	measure 'Revenue 2023 EOD' = CONCATENATE(TRUNC((CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="REVENU DES COMMISSONS",year(ANMVT_PNL[Month])=2023)+CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="INTERETS DEBITEURS",year(ANMVT_PNL[Month])=2023))/1000000,2),"M")
+		lineageTag: f83eab4d-4b87-40f1-8a09-32afe8ce4385
+
+	measure 'PNB 2023 EOD' = CONCATENATE(TRUNC(((CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="REVENU DES COMMISSONS",year(ANMVT_PNL[Month])=2023)+CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="INTERETS DEBITEURS",year(ANMVT_PNL[Month])=2023))-(CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="INTERETS CREDITEURS",year(ANMVT_PNL[Month])=2023)+CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="CHARGES LIEES AUX COMMISSIONS",year(ANMVT_PNL[Month])=2023)))/1000000,2),"M")
+		lineageTag: 9d53ad55-b5a9-467c-b279-2adab3884930
+
+	measure 'Charges 2022(Year)' = CONCATENATE(TRUNC((CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="INTERETS CREDITEURS",year(ANMVT_PNL[Month])=2022)+CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="CHARGES LIEES AUX COMMISSIONS",year(ANMVT_PNL[Month])=2022))/1000000,2),"M")
+		lineageTag: 8acccbe7-cc27-4124-b3d4-388ae8c33176
+
+	measure 'Revenue 2022(Year)' = CONCATENATE(TRUNC((CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="REVENU DES COMMISSONS",year(ANMVT_PNL[Month])=2022)+CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="INTERETS DEBITEURS",year(ANMVT_PNL[Month])=2022))/1000000,2),"M")
+		lineageTag: 79082657-cde3-4ec5-9383-0cf8f08f6cb7
+
+	measure 'PNB 2022(Year)' = CONCATENATE(TRUNC(((CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="REVENU DES COMMISSONS",year(ANMVT_PNL[Month])=2022)+CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="INTERETS DEBITEURS",year(ANMVT_PNL[Month])=2022))-(CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="INTERETS CREDITEURS",year(ANMVT_PNL[Month])=2022)+CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="CHARGES LIEES AUX COMMISSIONS",year(ANMVT_PNL[Month])=2022)))/1000000,2),"M")
+		lineageTag: 3c8181dd-99a1-41fe-bddb-f18e5d12ecbe
+
+	measure PNB_Objectif_branch =
+			(SUMX(DISTINCT(ANMVT_PNL[Branch Code & Name]),[Measure_tar_PNB_branch])*([Monh]/12))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: 1b9335a0-cde6-41aa-a738-be1b6ca925f7
+
+	measure Measure_tar_PNB_branch = MAXX(DISTINCT(ANMVT_PNL[Branch Code & Name]),MAX(([PNB_target2023_branch])))
+		lineageTag: 94f934ca-c425-430f-8009-558ab724d0ce
+
+	measure Sum_target_PNB_branch =
+			SUMX(DISTINCT(ANMVT_PNL[Branch Code & Name]),[Measure_tar_PNB_branch])+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: e6f29d5e-31cb-4aa4-8d85-5e2988c17aa9
+
+	measure Monh = calculate(max(ANMVT_PNL[Monht]),ANMVT_PNL[Month]=max(ANMVT_PNL[Month]))
+		formatString: 0
+		lineageTag: 35ad1a9b-d66e-4301-b26a-3665c2d1e0d1
+
+	measure Measure_tar_PNB_comm_market = MAXX(DISTINCT(ANMVT_PNL[comm_market]),MAX(([PNB_target2023_comm_market])))
+		lineageTag: 60d84012-288e-4843-8678-188fb4648920
+
+	measure Sum_target_PNB_comm_market =
+			SUMX(DISTINCT(ANMVT_PNL[Column 2]),[Measure_tar_PNB_comm_market])+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: d245ac96-1b02-4256-ad6f-eb541ed465ed
+
+	measure Sum_target_PNB_regional =
+			SUMX(DISTINCT(ANMVT_PNL[Column 2]),[Measure_tar_PNB_regional])+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: c17b3381-448f-4805-9c52-19fb6baa060e
+
+	measure PNB_Objectif_comm_market =
+			(SUMX(DISTINCT(ANMVT_PNL[comm_market]),[Measure_tar_PNB_comm_market])*([Monh]/12))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: 6788a759-0d1b-4195-aef3-e33d6e06271c
+
+	measure PNB_Objectif_regional =
+			(SUMX(DISTINCT(ANMVT_PNL[comm_market]),[Measure_tar_PNB_regional])*([Monh]/12))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: 5e4b7ee0-d9cd-454b-838e-2bc851e127c4
+
+	measure User_Selection = SELECTEDVALUE(User[Direction])
+		lineageTag: 7e19a14e-bda2-491f-8425-255ed0a0b136
+
+	measure PNB_Objectif_dec_branch =
+			(SUMX(DISTINCT(ANMVT_PNL[Branch Code & Name]),[Measure_tar_PNB_branch]))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: 986353ac-c98c-4439-99b4-bb03734fccc4
+
+	measure PNB_Objectif_dec_comm_market =
+			(SUMX(DISTINCT(ANMVT_PNL[comm_market]),[Measure_tar_PNB_comm_market]))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: e0168963-37b5-495c-b146-80b3c5c964ab
+
+	measure PNB_Objectif_dec_regional =
+			(SUMX(DISTINCT(ANMVT_PNL[comm_market]),[Measure_tar_PNB_regional]))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		formatString: 0
+		lineageTag: 6d903365-3ac7-4161-b588-e5adc8a32af1
+
+	measure PNB_emp = [Revenue_emp]-[Charges_emp]
+		lineageTag: a42dd5c5-c81f-4ac1-90c2-bd765e8e6020
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PNB_Employ = sumX(DISTINCT(ANMVT_PNL[EMP_EMPL.EMPLOYER_CLI]),[PNB_emp])
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 17b46315-2482-4291-a061-a21d0c8648b3
+
+	measure Measure_tar_PNB_resp_market = MAXX(DISTINCT(ANMVT_PNL[resp_market]),MAX(([PNB_target2023_resp_market])))
+		lineageTag: 3c7950cd-5af7-4062-9245-1c5a44f0c115
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Objectif de PNB (EOM)' = switch(true(),[User_Selection]="Agency",[PNB_objectif_branch],[User_Selection]="Commerciale",0,[User_Selection]="Marché",[PNB_Objectif_comm_market],[User_Selection]="Regional",[PNB_Objectif_regional],[User_Selection]="Resp. Marché",[PNB_Objectif_resp_market])
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: e86a2986-9152-41d7-bdb7-b59bc434dd86
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Objectif de PNB cette année (EOY)' = switch(true(),[User_Selection]="Agency",[PNB_objectif_dec_branch],[User_Selection]="Commerciale",0,[User_Selection]="Marché",[PNB_Objectif_dec_comm_market],[User_Selection]="Regional",[PNB_Objectif_dec_regional],[User_Selection]="Resp. Marché",[PNB_Objectif_dec_resp_market])
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 526c152b-d444-43fa-b0c2-4954ec87c852
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure PNB_Objectif_dec_resp_market =
+			(SUMX(DISTINCT(ANMVT_PNL[resp_market]),[Measure_tar_PNB_resp_market]))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		lineageTag: 25111d37-1207-431f-b8f4-f1ca817db580
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PNB_Objectif_resp_market =
+			(SUMX(DISTINCT(ANMVT_PNL[resp_market]),[Measure_tar_PNB_resp_market])*([Monh]/12))+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		lineageTag: b12ddc60-5677-44b7-b40e-be6b2c54cbe9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Sum_target_PNB_resp_market =
+			SUMX(DISTINCT(ANMVT_PNL[resp_market]),[Measure_tar_PNB_resp_market])+(CALCULATE(SUM(ANMVT_PNL[CVUSD]),
+			ANMVT_PNL[Month] = DATE(YEAR(today()) -1, 12, 31)))
+		lineageTag: ad7fe128-c93c-431f-8bf9-138e1b46f2ba
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Charges = (CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="INTERETS CREDITEURS")+CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="CHARGES LIEES AUX COMMISSIONS"))
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 0b5341b4-4805-48e9-99d7-083d972734c2
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure Charges_emp = (CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="INTERETS CREDITEURS",ANMVT_PNL[Column]="yes")+CALCULATE(SUM(ANMVT_PNL[DEBIT]),ANMVT_PNL[Composant]="CHARGES LIEES AUX COMMISSIONS",ANMVT_PNL[Column]="yes"))
+		lineageTag: 25e8cd52-600f-4094-8242-76811911d6e3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Measure_tar_PNB_regional = MAXX(DISTINCT(ANMVT_PNL[Region]),MAX(([PNB_target2023_regional])))
+		lineageTag: 5a38cb10-c66f-447e-86c0-9f7130ea585f
+
+	measure Revenue = CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="REVENU DES COMMISSONS")+CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="INTERETS DEBITEURS")
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 988ad4c0-12da-419a-8643-76567f7a6bc6
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure Revenue_emp = CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="REVENU DES COMMISSONS",ANMVT_PNL[Column]="yes")+CALCULATE(SUM(ANMVT_PNL[CREDIT]),ANMVT_PNL[Composant]="INTERETS DEBITEURS",ANMVT_PNL[Column]="yes")
+		lineageTag: 953d5807-7415-4fa7-943a-628554ed9185
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NCP
+		dataType: string
+		lineageTag: ea34ac66-6575-4ab9-b0ab-529267817493
+		summarizeBy: none
+		sourceColumn: NCP
+
+		annotation SummarizationSetBy = Automatic
+
+	column NCC
+		dataType: string
+		lineageTag: 0ef7a997-b22f-40c0-bc59-820d22832c38
+		summarizeBy: none
+		sourceColumn: NCC
+
+		annotation SummarizationSetBy = Automatic
+
+	column PERIOD
+		dataType: string
+		lineageTag: f8709e39-5f13-4bc9-850c-bea83908b40f
+		summarizeBy: none
+		sourceColumn: PERIOD
+
+		annotation SummarizationSetBy = Automatic
+
+	column CLI
+		dataType: string
+		lineageTag: ea835221-d61a-462b-84b4-9dcc334c96fc
+		summarizeBy: none
+		sourceColumn: CLI
+
+		annotation SummarizationSetBy = Automatic
+
+	column ACCOUNT_NO
+		dataType: double
+		formatString: 0
+		lineageTag: 104959b1-0e2c-407b-bd4c-d097658ba7cb
+		summarizeBy: none
+		sourceColumn: ACCOUNT_NO
+
+		annotation SummarizationSetBy = Automatic
+
+	column ACCOUNT_NAME
+		dataType: string
+		lineageTag: 70c67d76-e2ba-4cf7-832b-c23fe11fe1f3
+		summarizeBy: none
+		sourceColumn: ACCOUNT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column DEFILEMENT
+		dataType: string
+		lineageTag: b04026e8-39fc-462b-a14d-57ea52874520
+		summarizeBy: none
+		sourceColumn: DEFILEMENT
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_3
+		dataType: string
+		lineageTag: f79456f3-487e-4f31-9220-9b204055a4ed
+		summarizeBy: none
+		sourceColumn: COMPOSANT_3
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_2
+		dataType: string
+		lineageTag: 245a70ca-4fab-40ff-b8ec-06de62b60b78
+		summarizeBy: none
+		sourceColumn: COMPOSANT_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1
+		dataType: string
+		lineageTag: 22b7d0a6-43a4-4df3-b493-0c9b95175e9d
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_1
+		dataType: string
+		lineageTag: 27cbfca2-eed0-4b25-b34b-d8046921113e
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_2
+		dataType: string
+		lineageTag: 9cf08e6a-2427-46fa-99fd-2e6ced36bfed
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_3
+		dataType: string
+		lineageTag: ff893562-87c5-4f14-9839-1ef090e4f183
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_3
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_4
+		dataType: string
+		lineageTag: ff13eab2-4b71-4335-b5db-9957d982cd19
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_4
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_5
+		dataType: string
+		lineageTag: c0b4af61-4088-4315-8432-fc0cc7d2a3f1
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_5
+
+		annotation SummarizationSetBy = Automatic
+
+	column MON
+		dataType: double
+		lineageTag: 209d72d3-0e42-4ca0-bc9b-8723b5ee71d0
+		summarizeBy: sum
+		sourceColumn: MON
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Mon CVUSD' = ANMVT_PNL[MON]/2000
+		lineageTag: ed890e35-e2e1-4ef6-9e2c-2f3bcf25e875
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DEVO
+		dataType: string
+		lineageTag: e5131a3a-61d8-4bf9-a0d1-abc9aa640ace
+		summarizeBy: none
+		sourceColumn: DEVO
+
+		annotation SummarizationSetBy = Automatic
+
+	column AGE
+		dataType: string
+		lineageTag: 4995cb42-6756-404c-84bf-4cd6bdaf6ce7
+		summarizeBy: none
+		sourceColumn: AGE
+
+		annotation SummarizationSetBy = Automatic
+
+	column NOM
+		dataType: string
+		lineageTag: 594d3a65-644b-4d9a-b372-4bd2ed5b3b70
+		summarizeBy: none
+		sourceColumn: NOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column GES
+		dataType: string
+		lineageTag: 50e0c731-1869-48ba-9129-1ee2739cc111
+		summarizeBy: none
+		sourceColumn: GES
+
+		annotation SummarizationSetBy = Automatic
+
+	column QUA
+		dataType: string
+		lineageTag: f2713909-8f3c-4c6a-97cb-469593362ff6
+		summarizeBy: none
+		sourceColumn: QUA
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEG
+		dataType: string
+		lineageTag: 51a7d9c9-6915-4d57-80f4-ec694f49ea15
+		summarizeBy: none
+		sourceColumn: SEG
+
+		annotation SummarizationSetBy = Automatic
+
+	column CVUSD
+		dataType: double
+		lineageTag: 32a17b9e-f4ff-4e52-939f-89ef1f8d426a
+		summarizeBy: sum
+		sourceColumn: CVUSD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NAME_OF_THE_BRANCH
+		dataType: string
+		lineageTag: 0e90d158-72b1-4cdb-9b6f-39a88be79ea1
+		summarizeBy: none
+		sourceColumn: NAME_OF_THE_BRANCH
+
+		annotation SummarizationSetBy = Automatic
+
+	column CITY
+		dataType: string
+		lineageTag: 8ddc825d-6153-471f-9413-31a3efa76fd0
+		summarizeBy: none
+		sourceColumn: CITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column PROVINCE
+		dataType: string
+		lineageTag: 33854032-8aff-4582-8fa4-b73a270caea9
+		summarizeBy: none
+		sourceColumn: PROVINCE
+
+		annotation SummarizationSetBy = Automatic
+
+	column ZONE
+		dataType: string
+		lineageTag: f9110583-8e01-43b4-9536-e4bc1b765e10
+		summarizeBy: none
+		sourceColumn: ZONE
+
+		annotation SummarizationSetBy = Automatic
+
+	column TYPE
+		dataType: string
+		lineageTag: 7d2f7c7d-61c3-4b38-9e83-bb61ea4a8bac
+		summarizeBy: none
+		sourceColumn: TYPE
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Code & Name' = ANMVT_PNL[AGE] & "-" & related(BKAGE[LIB])
+		lineageTag: dbdca0ef-8ee3-4cf2-83f2-085e5b99224f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DEBIT
+		dataType: double
+		lineageTag: cae6a9c8-f74a-44b8-b729-5127d60d6346
+		summarizeBy: sum
+		sourceColumn: DEBIT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CREDIT
+		dataType: double
+		lineageTag: 2318f5c7-37d9-4db5-b46f-8dd02ea76d15
+		summarizeBy: sum
+		sourceColumn: CREDIT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NET
+		dataType: double
+		lineageTag: 50c27877-7814-4eda-b224-505e88e52034
+		summarizeBy: sum
+		sourceColumn: NET
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RRNNCP
+		dataType: string
+		lineageTag: c000f8d7-91e9-4f57-be53-ce8237b2a475
+		summarizeBy: none
+		sourceColumn: RRNNCP
+
+		annotation SummarizationSetBy = Automatic
+
+	column RRNCLI
+		dataType: string
+		lineageTag: 4f3817ab-c70a-4c6e-a151-d67096836f38
+		summarizeBy: none
+		sourceColumn: RRNCLI
+
+		annotation SummarizationSetBy = Automatic
+
+	column Debit+ = abs(ANMVT_PNL[DEBIT])
+		lineageTag: 4b9cfd9e-c0af-4828-b720-fc75139fe090
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Credit+ = abs(ANMVT_PNL[CREDIT])
+		lineageTag: 4f5bcb0b-6a4a-4cd0-be04-55affb8350a9
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Client_Net_7
+		dataType: string
+		lineageTag: 4aa824d2-51ce-46ec-934f-5d6cfa789fcb
+		summarizeBy: none
+		sourceColumn: Client_Net_7
+
+		annotation SummarizationSetBy = Automatic
+
+	column Clint_Net_6
+		dataType: string
+		lineageTag: 023acedc-0c74-409b-bc0b-2c207079dddc
+		summarizeBy: none
+		sourceColumn: Clint_Net_6
+
+		annotation SummarizationSetBy = Automatic
+
+	column Client_Net
+		dataType: string
+		lineageTag: cf176585-abd5-47b8-b7e5-2e42c8b55dbc
+		summarizeBy: none
+		sourceColumn: Client_Net
+
+		annotation SummarizationSetBy = Automatic
+
+	column Net_Profit = if(value(ANMVT_PNL[Class])=6,value(value(ANMVT_PNL[DEBIT])-value(ANMVT_PNL[CREDIT])),value(value(ANMVT_PNL[CREDIT])-value(ANMVT_PNL[DEBIT])))
+		lineageTag: 0991563b-b23f-49e1-929b-13c26a4601dc
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Segment = related(SEG[SEG])
+		lineageTag: 842669a2-592c-40c8-87a4-0b885f0bac50
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEC
+		dataType: string
+		lineageTag: 58283a74-b841-4300-9fb1-4f635c1f21cd
+		summarizeBy: none
+		sourceColumn: SEC
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sector = if(ANMVT_PNL[SEC]="     -", "2000 -AUTRES ACTIVITES NON SECTORISE", ANMVT_PNL[SEC])
+		lineageTag: 270ecdcb-a248-4b15-a40f-27f83d0d5048
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Client Name' = ANMVT_PNL[CLI] & "-" & ANMVT_PNL[NOM]
+		lineageTag: ab1514fd-d7d4-4413-9632-96e200d3bf07
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Employer_y_n = if(([EMP_EMPL.BKEMPL_CLI_NAME] & "-" & [EMP_EMPL.BKEMPL_CLI_NAME])="-","Non Employer","Employer")
+		lineageTag: e9c763f6-2cb0-404b-b47e-4a0d0e606918
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EMP_EMPL.CLI'
+		dataType: string
+		lineageTag: 5290f4a5-cabf-4941-a310-038ac3c9b43c
+		summarizeBy: none
+		sourceColumn: EMP_EMPL.CLI
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EMP_EMPL.EMP'
+		dataType: string
+		lineageTag: 7dabd7e6-af1e-49f7-8c2b-7265a680bace
+		summarizeBy: none
+		sourceColumn: EMP_EMPL.EMP
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EMP_EMPL.BKEMPL_CLI_NAME'
+		dataType: string
+		lineageTag: c5b89884-e7c6-449e-8c35-3f504b3da52a
+		summarizeBy: none
+		sourceColumn: EMP_EMPL.BKEMPL_CLI_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EMP_EMPL.EMP_ID'
+		dataType: string
+		lineageTag: 1407f2a9-7ace-4c17-9c16-ab06608afeb5
+		summarizeBy: none
+		sourceColumn: EMP_EMPL.EMP_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EMP_EMPL.EMPLOYER_CLI'
+		dataType: string
+		lineageTag: 1156abf9-1ee6-4576-804f-773667d2b17a
+		summarizeBy: none
+		sourceColumn: EMP_EMPL.EMPLOYER_CLI
+
+		annotation SummarizationSetBy = Automatic
+
+	column comm_market = ANMVT_PNL[ZONE] & related(SEG[Markets])
+		lineageTag: 05405981-592e-499e-b5a4-41f5d935c3cd
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PNB_target2023_branch = related(Targets_Agencies[PNB])
+		lineageTag: dc8f0ecf-9911-4e6e-9483-447c3e6f39e3
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Monht = ```
+			month(ANMVT_PNL[Month])
+			
+			```
+		formatString: 0
+		lineageTag: ebb8f5e6-6add-41ec-80b8-a70fd223149c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Column 2' = month(ANMVT_PNL[Month])
+		formatString: 0
+		lineageTag: 3d652861-cba0-4a07-8308-8dbb42f05160
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column PNB_target2023_comm_market = related(Targets_comm_market[PNB])
+		lineageTag: e582778e-f929-4a18-ad4f-3f19f48ac743
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column PNB_target2023_regional = related(Targets_regional[PNB])
+		lineageTag: 68435102-6e65-4aaa-a819-d5e68da19d47
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gestionnaire = related('Client Balance'[GES])
+		lineageTag: 9c076a4c-663d-4245-8ed7-e22ac6e461e7
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column = if(and(trim(ANMVT_PNL[EMP_EMPL.EMPLOYER_CLI])=trim(ANMVT_PNL[CLI]),trim(ANMVT_PNL[EMP_EMPL.EMPLOYER_CLI])<>""),"yes")
+		lineageTag: 505303a4-c748-4b11-90bf-a971e5f5aaec
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marché = if(RELATED(SEG[MARKET])="","Others",RELATED(SEG[MARKET]))
+		lineageTag: ed24157c-78f0-4341-ba07-a6f73195bba1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column CLASS
+		dataType: string
+		lineageTag: 0638dfa3-670b-4490-b1c4-0619175eb406
+		summarizeBy: none
+		sourceColumn: CLASS
+
+		annotation SummarizationSetBy = Automatic
+
+	column MONTH_PERIOD
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b45a7b58-1a76-4daf-84db-da350de42d76
+		summarizeBy: none
+		sourceColumn: MONTH_PERIOD
+
+		variation Variation
+			isDefault
+			relationship: 232a43d1-07e7-476b-b7b8-300b251ca72d
+			defaultHierarchy: LocalDateTable_4c6b6cef-0051-4f5f-beaa-93cc666d16f8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 466e8d60-92a4-4b31-bc09-94ce2c032585
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 43c3eb65-0045-4f9a-99a5-9de07ba3c4df
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Composant
+		dataType: string
+		lineageTag: e30ba9fc-4854-4e1d-acbf-48c410a97432
+		summarizeBy: none
+		sourceColumn: Composant
+
+		annotation SummarizationSetBy = Automatic
+
+	column resp_market = (ANMVT_PNL[SEG]) & related(SEG[Markets])
+		lineageTag: b8c20d01-7ed6-46f6-9867-7d36c97ccab1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PNB_target2023_resp_market = related(Targets_resp_market[PNB])
+		lineageTag: 47249386-27eb-4488-8965-ac7c5826cffa
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ANMVT_PNL = m
+		mode: import
+		source =
+				let
+				   Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true]),
+				    DMUSER = Source{[Schema="DMUSER"]}[Data],
+				    ANMVT_PNL_PNB_CLI_PROF_MONTHLY = DMUSER{[Name="ANMVT_PNL_PNB_CLI_PROF_MONTHLY"]}[Data],
+				    #"Added Custom" = Table.AddColumn(ANMVT_PNL_PNB_CLI_PROF_MONTHLY, "Client_Net_7", each ([CREDIT]-[DEBIT])),
+				    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Clint_Net_6", each [DEBIT]-[CREDIT]),
+				    #"Added Custom2" = Table.AddColumn(#"Added Custom1", "Client_Net", each [Client_Net_7]+[Clint_Net_6]),
+				    #"Added Custom5" = Table.AddColumn(#"Added Custom2", "Month", each Date.From([MONTH_PERIOD])),
+				    #"Added Custom3" = Table.AddColumn(#"Added Custom5", "Region", each [ZONE]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom3",{{"Month", type datetime}}),
+				    #"Added Custom4" = Table.AddColumn(#"Changed Type", "Composant", each [COMPOSANT_3]),
+				    #"Filtered Rows" = Table.SelectRows(#"Added Custom4", each [Month] >= RangeStart and [Month] < RangeEnd)
+				in
+				    #"Filtered Rows"
+				
+				///let
+				 ///   Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select * from dmuser.anmvt_pnl_pnb_cli_prof "]),
+				///    #"Renamed Columns" = Table.RenameColumns(Source,{{"ZONE", "Region"}, {"COMPOSANT_3", "Composant"}}),
+				 ///   #"Inserted First Characters" = Table.AddColumn(#"Renamed Columns", "First Characters", each Text.Start([NCP], 1), type text),
+				 ///   #"Renamed Columns1" = Table.RenameColumns(#"Inserted First Characters",{{"First Characters", "Class"}}),
+				 ///   #"Added Custom" = Table.AddColumn(#"Renamed Columns1", "Client_Net_7", each ([CREDIT]-[DEBIT])),
+				 ///   #"Added Custom1" = Table.AddColumn(#"Added Custom", "Clint_Net_6", each [DEBIT]-[CREDIT]),
+				 ///   #"Added Custom2" = Table.AddColumn(#"Added Custom1", "Client_Net", each [Client_Net_7]+[Clint_Net_6]),
+				 ///   #"Duplicated Column" = Table.DuplicateColumn(#"Added Custom2", "PERIOD", "PERIOD - Copy"),
+				 ///   #"Changed Type" = Table.TransformColumnTypes(#"Duplicated Column",{{"PERIOD - Copy", type date}}),
+				 ///   #"Renamed Columns2" = Table.RenameColumns(#"Changed Type",{{"PERIOD - Copy", "Month"}}),
+				 ///   #"Merged Queries" = Table.NestedJoin(#"Renamed Columns2", {"CLI"}, EMP_EMPL, {"CLI"}, "EMP_EMPL", JoinKind.LeftOuter),
+				///    #"Expanded EMP_EMPL" = Table.ExpandTableColumn(#"Merged Queries", "EMP_EMPL", {"CLI", "EMP", "BKEMPL_CLI_NAME", "EMP_ID", "EMPLOYER_CLI"}, {"EMP_EMPL.CLI", "EMP_EMPL.EMP", "EMP_EMPL.BKEMPL_CLI_NAME", "EMP_EMPL.EMP_ID", "EMP_EMPL.EMPLOYER_CLI"})
+				///in
+				///    #"Expanded EMP_EMPL"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_IsMQueryFoldable = True
+

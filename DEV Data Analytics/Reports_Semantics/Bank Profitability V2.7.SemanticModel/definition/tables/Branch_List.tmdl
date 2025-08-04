@@ -1,0 +1,266 @@
+table Branch_List
+	lineageTag: 158d866a-580b-424b-b2f0-3016358f52e3
+
+	column 'Branch Code'
+		dataType: string
+		lineageTag: ec18f624-00de-423d-a98c-831710952d68
+		summarizeBy: none
+		sourceColumn: Branch Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Name of the Branch'
+		dataType: string
+		lineageTag: 527d8344-855e-4f62-adee-e816421d8830
+		summarizeBy: none
+		sourceColumn: Name of the Branch
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 28222173-16e2-4af0-a071-3b446c1f0edf
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Province
+		dataType: string
+		lineageTag: 8c894a9d-b1d3-42fb-8800-b8b2677ce099
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zone
+		dataType: string
+		lineageTag: 7468ce0e-9a6c-4cbd-b8c3-bdd5fcc829cd
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: Zone
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type
+		dataType: string
+		lineageTag: 048194de-9386-4b62-bd56-2b18e0278602
+		summarizeBy: none
+		sourceColumn: Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Nature'
+		dataType: string
+		lineageTag: f725ffa7-80be-4c3e-8cc7-dd469553885c
+		summarizeBy: none
+		sourceColumn: Branch Nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Status'
+		dataType: string
+		lineageTag: a118226e-12a7-4028-92e6-47ddbe88ab69
+		summarizeBy: none
+		sourceColumn: Branch Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Commercial Head'
+		dataType: string
+		lineageTag: 45ec2ea9-bc7b-4e4e-8706-ec0fb07b1141
+		summarizeBy: none
+		sourceColumn: Branch Commercial Head
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adjoint administartif Name'
+		dataType: string
+		lineageTag: 4691f61b-8976-4f67-b56d-d75d5eeaff8a
+		summarizeBy: none
+		sourceColumn: Adjoint administartif Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adjoint administartif_User Principal'
+		dataType: string
+		lineageTag: 8e2aa9a8-8aef-470b-a95e-0e3153637111
+		summarizeBy: none
+		sourceColumn: Adjoint administartif_User Principal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Resposible adjoint administartif'
+		dataType: string
+		lineageTag: c4e6a4c5-1486-46e5-abf5-81603f2b6c53
+		summarizeBy: none
+		sourceColumn: Resposible adjoint administartif
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column13
+		dataType: string
+		lineageTag: 39916639-073b-43ef-b0d1-ff15dcdcfdcc
+		summarizeBy: none
+		sourceColumn: Column13
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Manager'
+		dataType: string
+		lineageTag: 0cc20789-38c8-4356-b2d6-d7627cad2b2a
+		summarizeBy: none
+		sourceColumn: Branch Manager
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Manager Email ID'
+		dataType: string
+		lineageTag: fc3b2b00-5bae-47ea-bd8e-eac1aac3bbdb
+		summarizeBy: none
+		sourceColumn: Branch Manager Email ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of Branch Manager'
+		dataType: string
+		lineageTag: a52e2350-107c-40e5-a45e-16502ab33289
+		summarizeBy: none
+		sourceColumn: User Principal of Branch Manager
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Attached Branch'
+		dataType: string
+		lineageTag: 47b315de-4632-4266-8142-9a00d2763a20
+		summarizeBy: none
+		sourceColumn: Attached Branch
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Manager_1'
+		dataType: string
+		lineageTag: 80e31dac-e95f-4446-98af-1214568d35b5
+		summarizeBy: none
+		sourceColumn: Branch Manager_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Manager Email ID_2'
+		dataType: string
+		lineageTag: 03d8be16-b889-4a07-ad96-a085a8716d01
+		summarizeBy: none
+		sourceColumn: Branch Manager Email ID_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of Branch Manager_3'
+		dataType: string
+		lineageTag: 418328b4-94df-443d-a830-60cfcca78c26
+		summarizeBy: none
+		sourceColumn: User Principal of Branch Manager_3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Regional Director'
+		dataType: string
+		lineageTag: 678c9b3c-191f-4860-a782-65916b999899
+		summarizeBy: none
+		sourceColumn: Regional Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Regional Director Email ID'
+		dataType: string
+		lineageTag: 9fcd1f7d-752f-4083-9018-3fa6c2c72ef2
+		summarizeBy: none
+		sourceColumn: Regional Director Email ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of Regional Director'
+		dataType: string
+		lineageTag: 5e7ff7ab-64da-4a0c-bbc9-49ef7e2266a3
+		summarizeBy: none
+		sourceColumn: User Principal of Regional Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Regional Director Email ID_4'
+		dataType: string
+		lineageTag: 64b261d4-b89d-420f-9267-6b4491553ebb
+		summarizeBy: none
+		sourceColumn: Regional Director Email ID_4
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of Regional Director_5'
+		dataType: string
+		lineageTag: 641d285d-a35c-4533-a74b-11bbf2dcd804
+		summarizeBy: none
+		sourceColumn: User Principal of Regional Director_5
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Commercial Director Email ID'
+		dataType: string
+		lineageTag: 80f17730-41f9-4570-b63b-0f9d0ff0cd77
+		summarizeBy: none
+		sourceColumn: Commercial Director Email ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of Commercial Director'
+		dataType: string
+		lineageTag: 6dbd9204-6c58-4a36-8afb-df0720a8f4f2
+		summarizeBy: none
+		sourceColumn: User Principal of Commercial Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DGA Email ID'
+		dataType: string
+		lineageTag: 3adb3c01-463d-4ee5-8ade-e3455100a7e0
+		summarizeBy: none
+		sourceColumn: DGA Email ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of DGA'
+		dataType: string
+		lineageTag: 6beeede4-e2ca-45f9-90c0-16fe80646d59
+		summarizeBy: none
+		sourceColumn: User Principal of DGA
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DG Email ID'
+		dataType: string
+		lineageTag: bb43dc11-f417-46ff-a9eb-fc7174e9eb1d
+		summarizeBy: none
+		sourceColumn: DG Email ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User Principal of DG'
+		dataType: string
+		lineageTag: 8f8af0ba-06f9-4180-b9c3-4701cc78d19e
+		summarizeBy: none
+		sourceColumn: User Principal of DG
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Branch_List-01afeb57-8402-46fa-a6b1-9a54f057c0d7 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("\\Phpfsbrtn01\Bureautique\Public\Data Analytics\12. Misc\03. Produit Net Bancaire (Profitability par client)\Dimension tables\User Principal Names of Branch Managers_vf.xlsx"), null, true),
+				    Branch_List_Sheet = Source{[Item="Branch_List",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Branch_List_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Branch Code", type text}, {"Name of the Branch", type text}, {"City", type text}, {"Province", type text}, {"Zone", type text}, {"Type", type text}, {"Branch Nature", type text}, {"Branch Status", type text}, {"Branch Commercial Head", type any}, {"Adjoint administartif Name", type text}, {"Adjoint administartif_User Principal", type text}, {"Resposible adjoint administartif", type text}, {"Column13", type text}, {"Branch Manager", type text}, {"Branch Manager Email ID", type text}, {"User Principal of Branch Manager", type text}, {"Attached Branch", type text}, {"Branch Manager_1", type text}, {"Branch Manager Email ID_2", type text}, {"User Principal of Branch Manager_3", type text}, {"Regional Director", type text}, {"Regional Director Email ID", type text}, {"User Principal of Regional Director", type text}, {"Regional Director Email ID_4", type text}, {"User Principal of Regional Director_5", type text}, {"Commercial Director Email ID", type text}, {"User Principal of Commercial Director", type text}, {"DGA Email ID", type text}, {"User Principal of DGA", type text}, {"DG Email ID", type text}, {"User Principal of DG", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

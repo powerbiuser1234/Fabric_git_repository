@@ -1,0 +1,111 @@
+table Targets_resp_market
+	lineageTag: 71b63563-99bf-4627-987f-be52190143d1
+
+	column 'Segment Code'
+		dataType: int64
+		formatString: 0
+		lineageTag: ce382b53-6999-437a-b005-6315576cf8f0
+		summarizeBy: count
+		sourceColumn: Segment Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Market
+		dataType: string
+		lineageTag: 75c875ac-5cb7-4ffd-963d-95ad93cd39e1
+		summarizeBy: none
+		sourceColumn: Market
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Responsible Market'
+		dataType: string
+		lineageTag: 48cd2d2e-a482-4e64-a16e-e04d75631ab2
+		summarizeBy: none
+		sourceColumn: Responsible Market
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Responsible Market User Principal'
+		dataType: string
+		lineageTag: a1e90b18-8cbe-4c98-a094-464879f95a8e
+		summarizeBy: none
+		sourceColumn: Responsible Market User Principal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Deposits(Decemer 22 + ↓)'
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a522040-54b2-4897-9740-9b3031418a91
+		summarizeBy: sum
+		sourceColumn: Deposits(Decemer 22 + ↓)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Loans(Decemer 22 + ↓)'
+		dataType: int64
+		formatString: 0
+		lineageTag: ace2064c-fad0-4213-b871-db1a0a7701fe
+		summarizeBy: sum
+		sourceColumn: Loans(Decemer 22 + ↓)
+
+		annotation SummarizationSetBy = Automatic
+
+	column NPL
+		dataType: double
+		lineageTag: 0cce78b4-6ce5-4822-9bbc-f0e187c0c8b2
+		summarizeBy: sum
+		sourceColumn: NPL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CTO
+		dataType: int64
+		formatString: 0
+		lineageTag: 3248604a-a820-43cc-9b67-0fcc8c3abe92
+		summarizeBy: sum
+		sourceColumn: CTO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Client Aquisition(Decemer 22 + ↓)'
+		dataType: int64
+		formatString: 0
+		lineageTag: f655af0e-714b-49b9-b8e1-657681059227
+		summarizeBy: sum
+		sourceColumn: Client Aquisition(Decemer 22 + ↓)
+
+		annotation SummarizationSetBy = Automatic
+
+	column PNB
+		dataType: double
+		lineageTag: a4322687-6762-47ea-9a03-358d7d2068c4
+		summarizeBy: sum
+		sourceColumn: PNB
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column = format('Targets_resp_market'[Segment Code],"000") & 'Targets_resp_market'[Market]
+		lineageTag: 748b40ce-6251-4598-ae71-0dd1876c2a38
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Targets_resp_market-5f127895-b881-4b4d-8e1c-eec192955be7 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("\\Phpfsbrtn01\Bureautique\Data_Analytics\Global Dashboard TB\Targets_Comm_market_resp_market_regional_2023.xlsx"), null, true),
+				    #"resp. market_Sheet" = Source{[Item="resp. market",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"resp. market_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Segment Code", Int64.Type}, {"Market", type text}, {"Responsible Market", type text}, {"Responsible Market User Principal", type text}, {"Deposits#(lf)(Decemer 22 + ↓)", Int64.Type}, {"Loans#(lf)(Decemer 22 + ↓)", Int64.Type}, {"NPL", type number}, {"CTO", Int64.Type}, {"Client Aquisition#(lf)(Decemer 22 + ↓)", Int64.Type}, {"PNB", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,351 @@
+table 'Client Balance'
+	lineageTag: 4c671180-896d-48c0-86ad-08230fc2a380
+
+	measure 'Refreshed On' = format(max('Client Balance'[Date]), "dd/mm/yyyy")
+		lineageTag: cf2865d7-247c-4a05-b3c0-bc80f1862406
+
+	column DCO
+		dataType: string
+		lineageTag: 7924d472-f907-4f60-8861-860d076c2229
+		summarizeBy: none
+		sourceColumn: DCO
+
+		annotation SummarizationSetBy = Automatic
+
+	column CLI
+		dataType: string
+		lineageTag: 77f67af4-d9f9-42d8-b760-48d87b4e95c2
+		summarizeBy: none
+		sourceColumn: CLI
+
+		annotation SummarizationSetBy = Automatic
+
+	column NOM
+		dataType: string
+		lineageTag: 4e28243d-d92a-402d-9bbb-7d0f4c27e3b7
+		summarizeBy: none
+		sourceColumn: NOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column DBT_BAL
+		dataType: double
+		lineageTag: a5cbe087-58b8-4165-ae55-59347d578435
+		summarizeBy: sum
+		sourceColumn: DBT_BAL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TL
+		dataType: double
+		lineageTag: f63237ae-02ab-45cf-8361-43e8e633cd90
+		summarizeBy: sum
+		sourceColumn: TL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DISC
+		dataType: double
+		lineageTag: 448dd75d-f5cb-4dc7-8d86-a7d03e9d2be9
+		summarizeBy: sum
+		sourceColumn: DISC
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LN_ON_TD
+		dataType: double
+		lineageTag: f6b1da50-9230-4cae-ab65-a59dadcfeee8
+		summarizeBy: sum
+		sourceColumn: LN_ON_TD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CRD_BAL
+		dataType: double
+		lineageTag: 97b5778d-f956-4b3e-a8ff-059044e0066d
+		summarizeBy: sum
+		sourceColumn: CRD_BAL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DAT
+		dataType: double
+		lineageTag: 7ed8b50c-ade4-4b9b-b4d3-ed18ef37ef56
+		summarizeBy: sum
+		sourceColumn: DAT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LC
+		dataType: double
+		lineageTag: b67aee83-dcd4-42c0-8902-b9471f4ec9d5
+		summarizeBy: sum
+		sourceColumn: LC
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PROV_LC
+		dataType: double
+		lineageTag: f6ca9cdb-c2cb-49ec-99da-e9ebc640b1dc
+		summarizeBy: sum
+		sourceColumn: PROV_LC
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GAR
+		dataType: double
+		lineageTag: 40074fac-5c2c-4db4-87f5-aad1bbfb83b6
+		summarizeBy: sum
+		sourceColumn: GAR
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PROV_GAR
+		dataType: double
+		lineageTag: 593dbf54-2327-4bbb-9954-3ffa821abac4
+		summarizeBy: sum
+		sourceColumn: PROV_GAR
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CDT_CRD
+		dataType: double
+		lineageTag: 4e8c06de-7ea7-413c-b028-85712ebe9fbf
+		summarizeBy: sum
+		sourceColumn: CDT_CRD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PROV_CDT_CRD
+		dataType: double
+		lineageTag: ae4612a0-a292-49f0-be50-266ad2057afd
+		summarizeBy: sum
+		sourceColumn: PROV_CDT_CRD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AVAL
+		dataType: double
+		lineageTag: efcc59e4-1cd2-41d3-9472-25b567fbcf08
+		summarizeBy: sum
+		sourceColumn: AVAL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PROV_AVAL
+		dataType: double
+		lineageTag: cfe8faa2-6a0a-41c8-8541-3ae188c5a4a6
+		summarizeBy: sum
+		sourceColumn: PROV_AVAL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column IMP_LC_SIGHT
+		dataType: double
+		lineageTag: 6bfcb652-85d4-469f-97b9-984aa8b5c12b
+		summarizeBy: sum
+		sourceColumn: IMP_LC_SIGHT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column IMP_LC_DEFERED
+		dataType: string
+		lineageTag: b2c16a5e-6248-49df-8c5a-677da0653482
+		summarizeBy: none
+		sourceColumn: IMP_LC_DEFERED
+
+		annotation SummarizationSetBy = Automatic
+
+	column EXP_LC
+		dataType: string
+		lineageTag: bc3e4cdf-77dc-42f6-b4bb-00caeb08b6ca
+		summarizeBy: none
+		sourceColumn: EXP_LC
+
+		annotation SummarizationSetBy = Automatic
+
+	column GES
+		dataType: string
+		lineageTag: f016c887-4033-401e-a819-79848753a93d
+		summarizeBy: none
+		sourceColumn: GES
+
+		annotation SummarizationSetBy = Automatic
+
+	column LEGAL
+		dataType: string
+		lineageTag: d8d8a923-9be8-4a3c-8f9c-e76a67012579
+		summarizeBy: none
+		sourceColumn: LEGAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column CAT_BCC
+		dataType: string
+		lineageTag: b9dcd140-33bf-4dc2-bcd3-62e9ab9bc5d2
+		summarizeBy: none
+		sourceColumn: CAT_BCC
+
+		annotation SummarizationSetBy = Automatic
+
+	column LN_CLASS
+		dataType: string
+		lineageTag: b6b6803d-1ca4-4ee8-a4c4-4916f16d0b3a
+		summarizeBy: none
+		sourceColumn: LN_CLASS
+
+		annotation SummarizationSetBy = Automatic
+
+	column SUB_SEG
+		dataType: string
+		lineageTag: 3e85ab75-2ca5-4c78-8d56-4335c9bbce45
+		summarizeBy: none
+		sourceColumn: SUB_SEG
+
+		annotation SummarizationSetBy = Automatic
+
+	column ISYS_NO
+		dataType: string
+		lineageTag: 6e7458e0-c67f-43c8-ba27-4cfc8b09c240
+		summarizeBy: none
+		sourceColumn: ISYS_NO
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEC_BCC
+		dataType: string
+		lineageTag: 8bf31b19-dc03-43f2-b19b-1165a70f7c03
+		summarizeBy: none
+		sourceColumn: SEC_BCC
+
+		annotation SummarizationSetBy = Automatic
+
+	column '''BR''||''-''||AGE'
+		dataType: string
+		lineageTag: 341183e6-a193-4301-8dc0-e33a0c460fe9
+		summarizeBy: none
+		sourceColumn: 'BR'||'-'||AGE
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEC_RWB
+		dataType: string
+		lineageTag: a3df2f4e-68a2-455a-9c32-9b24cbb5c848
+		summarizeBy: none
+		sourceColumn: SEC_RWB
+
+		annotation SummarizationSetBy = Automatic
+
+	column OD_LIMIT
+		dataType: double
+		lineageTag: be63ef28-500d-4807-a52a-7aa00243a260
+		summarizeBy: sum
+		sourceColumn: OD_LIMIT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TD_PLEDGED
+		dataType: double
+		lineageTag: 095f7947-4d32-4666-a8d2-06359bdf40f7
+		summarizeBy: sum
+		sourceColumn: TD_PLEDGED
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OTHR_FNDS_DISP
+		dataType: double
+		lineageTag: 12d6fe2f-b301-4e37-99ee-7d5954cad97d
+		summarizeBy: sum
+		sourceColumn: OTHR_FNDS_DISP
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NUM
+		dataType: string
+		lineageTag: 8099c34c-e806-4292-a83a-e7a54a47e18e
+		summarizeBy: none
+		sourceColumn: NUM
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Code Agence' = RIGHT('Client Balance'['BR'||'-'||AGE],5)
+		lineageTag: 619f0276-1f37-48c3-9c2d-a72939c7f05c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column COUNT(CLI)
+		dataType: double
+		lineageTag: e6670c35-96b7-40c3-918f-56d76d981743
+		summarizeBy: sum
+		sourceColumn: COUNT(CLI)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Segment = if('Client Balance'[SUB_SEG]= "    " ,"Others" ,'Client Balance'[SUB_SEG])
+		lineageTag: 8cea2719-6cff-4420-9e2f-cc2c8f973889
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date = date(year('Client Balance'[DCO]),month('Client Balance'[DCO]),day('Client Balance'[DCO]))
+		formatString: General Date
+		lineageTag: b23300c4-41fd-453b-a141-7cb8f73f4d41
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 62e5464b-2afc-40c3-ab45-04a43106b03b
+			defaultHierarchy: LocalDateTable_de313572-70f1-4c62-888f-faf6c5dec676.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Client Balance-eac10e3d-f917-47a9-ae79-6acbe0089fcc' = m
+		mode: import
+		source =
+				let
+				     Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select distinct DCO,#(lf)CLI,#(lf)NOM,#(lf)DBT_BAL,#(lf)TL,#(lf)DISC,#(lf)LN_ON_TD,#(lf)CRD_BAL,#(lf)DAT,#(lf)LC,#(lf)PROV_LC,#(lf)GAR,#(lf)PROV_GAR,#(lf)CDT_CRD,#(lf)PROV_CDT_CRD,#(lf)AVAL,#(lf)PROV_AVAL,#(lf)IMP_LC_SIGHT,#(lf)IMP_LC_DEFERED,#(lf)EXP_LC,#(lf)GES,#(lf)LEGAL,#(lf)CAT_BCC,#(lf)LN_CLASS,#(lf)SUB_SEG,#(lf)ISYS_NO,#(lf)SEC_BCC,#(lf)""'BR'||'-'||AGE"" as ""'BR'||'-'||AGE"",#(lf)SEC_RWB,#(lf)OD_LIMIT,#(lf)TD_PLEDGED,#(lf)OTHR_FNDS_DISP,#(lf)NUM,#(lf)count(cli)from ""DMUSER"".""CLIENT_BALANCE_DAILY""  group by DCO,#(lf)CLI,#(lf)NOM,#(lf)DBT_BAL,#(lf)TL,#(lf)DISC,#(lf)LN_ON_TD,#(lf)CRD_BAL,#(lf)DAT,#(lf)LC,#(lf)PROV_LC,#(lf)GAR,#(lf)PROV_GAR,#(lf)CDT_CRD,#(lf)PROV_CDT_CRD,#(lf)AVAL,#(lf)PROV_AVAL,#(lf)IMP_LC_SIGHT,#(lf)IMP_LC_DEFERED,#(lf)EXP_LC,#(lf)GES,#(lf)LEGAL,#(lf)CAT_BCC,#(lf)LN_CLASS,#(lf)SUB_SEG,#(lf)ISYS_NO,#(lf)SEC_BCC,#(lf)""'BR'||'-'||AGE"",#(lf)SEC_RWB,#(lf)OD_LIMIT,#(lf)TD_PLEDGED,#(lf)OTHR_FNDS_DISP,#(lf)NUM#(lf)#(lf)#(lf)having count(cli)=1 #(lf)#(lf)#(lf)"]),
+				    #"Removed Duplicates" = Table.Distinct(Source, {"CLI"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_ResultType = Table
+

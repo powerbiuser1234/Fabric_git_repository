@@ -1,0 +1,49 @@
+table 'Segment LookUp'
+	lineageTag: 1287f15b-8e07-4458-ba4c-329a10da5459
+
+	column MARKET
+		dataType: string
+		lineageTag: c26e9564-fdf6-43e2-8ce2-f7680440910d
+		summarizeBy: none
+		sourceColumn: MARKET
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEGMENT_NAME
+		dataType: string
+		lineageTag: 220f5eca-7329-4d84-a0df-cf9f6614d0ab
+		summarizeBy: none
+		sourceColumn: SEGMENT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEGMENT_CODE
+		dataType: double
+		lineageTag: 87ec99f7-7460-45f5-9265-ce89b8202a29
+		summarizeBy: none
+		sourceColumn: SEGMENT_CODE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SEG
+		dataType: string
+		lineageTag: 1647b667-3ec4-4dcc-8e17-6f0d2c2464c5
+		summarizeBy: none
+		sourceColumn: SEG
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Segment LookUp-2b916280-0102-49e1-a7c5-5beb091239d1' = m
+		mode: import
+		source =
+				let
+				     Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select MARKET,upper(SEGMENT_NAME) SEGMENT_NAME,SEGMENT_CODE from dmuser.STG_SEG_MAR"]),
+				    #"Added Custom" = Table.AddColumn(Source, "Custom", each Number.ToText([SEGMENT_CODE],"D3")),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Custom", "SEG"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

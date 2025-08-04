@@ -1,0 +1,150 @@
+relationship 13632b61-be36-43a8-bc64-50c32ee7c4c7
+	fromColumn: Profitability.AGE
+	toColumn: Branch_List.'Branch Code'
+
+relationship 65669f32-4892-4290-8034-aaa40a32eadd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calender.Date
+	toColumn: LocalDateTable_d284190b-c8c8-4462-b539-1f2758409498.Date
+
+relationship 6387f839-29dd-4f65-9e04-adc71f10c97f
+	crossFilteringBehavior: bothDirections
+	fromColumn: Profitability.DCO
+	toColumn: Calender.Date
+
+relationship 7efeec82-a6d2-4b40-aeaf-c018e0516f76
+	fromColumn: Profitability.CLI
+	toColumn: 'Client Balance'.CLI
+
+relationship 26c2a402-9f65-4d06-8040-0141aa384301
+	fromColumn: ANMVT_PNL.CLI
+	toColumn: 'Client Balance'.CLI
+
+relationship b0feb6a4-e5bd-4f4b-96d6-a63d2b99f88e
+	fromColumn: ANMVT_PNL.ACCOUNT_NO
+	toColumn: 'P&L LookUp'.ACCOUNT_NO
+
+relationship bb7cef16-2960-43fe-a1ef-e98fb46721d1
+	fromColumn: 'Client Balance'.SUB_SEG
+	toColumn: 'Segment LookUp'.SEGMENT_NAME
+
+relationship ae341b6e-87bd-4926-b1f6-b3c22097f69a
+	fromColumn: Profitability.CLI
+	toColumn: Suspense_Client_Lookup.CLIENT_ID
+
+relationship 9bb44293-e8e9-4336-8d98-5b58fb900602
+	fromColumn: Profitability.NCP
+	toColumn: 'P&L LookUp'.ACCOUNT_NO
+
+relationship 2345d383-e8fe-43d1-b4bd-287c09f976fa
+	fromColumn: ANMVT_PNL.CLI
+	toColumn: Suspense_Client_Lookup.CLIENT_ID
+
+relationship 2df51e9b-c18a-4f2e-b9d1-82ba8dd08ba9
+	isActive: false
+	fromColumn: 'Client Balance'.'Code Agence'
+	toColumn: Branch_List.'Branch Code'
+
+relationship cf74dd54-83ee-4d2d-acf0-3a269a619dbf
+	fromColumn: Profitability.AGE
+	toColumn: BKAGE.AGE
+
+relationship 448a44b7-2f31-4bf0-9a87-7546ac45acf7
+	fromColumn: ANMVT_PNL.AGE
+	toColumn: BKAGE.AGE
+
+relationship ecb13d08-8d96-4f68-b362-e9cfb82dd90e
+	fromColumn: ANMVT_PNL.SEG
+	toColumn: SEG.SEG
+
+relationship 9a69d5ab-a927-43a3-9046-3eb1b7148ebe
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: PNB_LOOKUP.'Account No'
+	toColumn: ANMVT_PNL.NCP
+
+relationship ec47d201-7bf7-44bd-a78b-fb7faa7c2885
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: PNB_LOOKUP1.'Account No'
+	toColumn: Profitability.NCP
+
+relationship ffc985fe-8894-4a73-bdbf-3fd55a70b26e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Query1.FRMDT
+	toColumn: LocalDateTable_83c4b285-1f23-42d8-bfe8-46407eaa5a45.Date
+
+relationship bee3d4b2-df68-4199-b65f-aafd2d9ee00c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Query1.TODT
+	toColumn: LocalDateTable_e983288c-963a-4577-be28-fd116051eee4.Date
+
+relationship ac244e54-3965-4f45-acba-5f4f4d83e416
+	fromColumn: Profitability.Region
+	toColumn: Targets_regional.Region
+
+relationship 253bfb8c-4c58-40ee-be29-e4bced0044b6
+	fromColumn: Profitability.Column
+	toColumn: Targets_resp_market.Column
+
+relationship 5bd5effc-c92c-47cd-8df5-6ebf48f963cf
+	fromColumn: ANMVT_PNL.comm_market
+	toColumn: Targets_comm_market.Column
+
+relationship ac1b08e9-ebeb-43c1-af4c-75a0c6646842
+	fromColumn: Profitability.Column3
+	toColumn: Targets_comm_market.Column
+
+relationship 07f28f58-e113-40a9-9c48-79ab196cb379
+	fromColumn: ANMVT_PNL.AGE
+	toColumn: Targets_Agencies.Branch
+
+relationship 8028a041-7e12-4cbb-88a0-63436b059de9
+	fromColumn: Profitability.AGE
+	toColumn: Targets_Agencies.Branch
+
+relationship 5f866607-1081-48dd-968f-0ebb25a39aee
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Segment_lookup1.SEGMENT_NAME
+	toColumn: SEG.SEGMENT_NAME
+
+relationship cfc7cd61-6018-4730-8bbc-61c4e1126a6b
+	isActive: false
+	fromColumn: ANMVT_PNL.SEG
+	toColumn: Segment_lookup1.SEG
+
+relationship 62e5464b-2afc-40c3-ab45-04a43106b03b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Client Balance'.Date
+	toColumn: LocalDateTable_de313572-70f1-4c62-888f-faf6c5dec676.Date
+
+relationship 0b150835-4b6f-4a1d-948f-8f15c28fd2e0
+	fromColumn: ANMVT_PNL.Region
+	toColumn: Targets_regional.Region
+
+relationship c6d598fe-4ffb-4d00-a2c4-5e9dc4b33725
+	joinOnDateBehavior: datePartOnly
+	fromColumn: ANMVT_PNL.Month
+	toColumn: LocalDateTable_d8c54c8b-dcdc-4c74-9222-fafdb3c930ef.Date
+
+relationship 232a43d1-07e7-476b-b7b8-300b251ca72d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: ANMVT_PNL.MONTH_PERIOD
+	toColumn: LocalDateTable_4c6b6cef-0051-4f5f-beaa-93cc666d16f8.Date
+
+relationship d7ee8e3a-114d-497a-8d82-af76e3309cf2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Query2.SYSDATE
+	toColumn: LocalDateTable_32d7c64d-c366-48ff-920d-64bfc9a55e62.Date
+
+relationship b5d88858-ae65-43c1-b722-f155a8f7a63c
+	crossFilteringBehavior: bothDirections
+	fromColumn: ANMVT_PNL.resp_market
+	toColumn: Targets_resp_market.Column
+
+relationship cedbe821-f598-4515-93bc-b942a9a8a206
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Query2 (2)'.FIRST_DATE_MONTH
+	toColumn: LocalDateTable_718984a5-8c08-47d5-8926-e9e6b838bf6f.Date
+

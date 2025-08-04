@@ -1,0 +1,103 @@
+table 'P&L LookUp'
+	lineageTag: 8b3a0550-4f0d-47de-922e-01c5cb75eaa6
+
+	column ACCOUNT_NO
+		dataType: int64
+		formatString: 0
+		lineageTag: 88de88e5-1443-4796-8e3a-7359d6cba1b2
+		summarizeBy: none
+		sourceColumn: ACCOUNT_NO
+
+		annotation SummarizationSetBy = Automatic
+
+	column ACCOUNT_NAME
+		dataType: string
+		lineageTag: 8355ab6b-30db-4513-9ceb-d45131f2ba6a
+		summarizeBy: none
+		sourceColumn: ACCOUNT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column DEFILEMENT
+		dataType: string
+		lineageTag: 08a5f8af-a3b0-4318-823f-2f022ba6efa0
+		summarizeBy: none
+		sourceColumn: DEFILEMENT
+
+		annotation SummarizationSetBy = Automatic
+
+	column Composant
+		dataType: string
+		lineageTag: eaf8b02f-3f4a-463a-a9d2-5cf8f37e913d
+		summarizeBy: none
+		sourceColumn: Composant
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_2
+		dataType: string
+		lineageTag: 047fb43f-c43c-42c9-a23c-febe8f7840c1
+		summarizeBy: none
+		sourceColumn: COMPOSANT_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1
+		dataType: string
+		lineageTag: ace0c8e2-c260-438b-a04e-6b7282f159fd
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_1
+		dataType: string
+		lineageTag: bc10a12c-ad15-4294-88fe-616c68222fb7
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_2
+		dataType: string
+		lineageTag: f8018815-7475-48f9-b3bb-7e0cfd3ce059
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_3
+		dataType: string
+		lineageTag: 6ba52f39-dd89-4b42-941d-16fa277f45f5
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_3
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_4
+		dataType: string
+		lineageTag: 41c65e1c-8533-429d-88fd-9bb60e6c905c
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_4
+
+		annotation SummarizationSetBy = Automatic
+
+	column COMPOSANT_1_5
+		dataType: string
+		lineageTag: b9bb459a-9e27-4ae2-a812-c9d49ba25b7d
+		summarizeBy: none
+		sourceColumn: COMPOSANT_1_5
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'P&L LookUp-e16baff5-7edd-453f-aeeb-b36acf7275b1' = m
+		mode: import
+		source =
+				let
+				         Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select * from dmuser.dim_pnl"]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"COMPOSANT_3", "Composant"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,41 @@
+table Sector_Lookup
+	lineageTag: 52afcb1c-323f-41fd-bea7-3c1796fa9f1a
+
+	column 'Secteur d’activité - Detailed Classification Rawbank'
+		dataType: string
+		lineageTag: f850d40d-6f1b-492e-b154-385d8bd6716c
+		summarizeBy: none
+		sourceColumn: Secteur d’activité - Detailed Classification Rawbank
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'New Groupings'
+		dataType: string
+		lineageTag: 46b426d9-4b0d-4887-b950-62551380c121
+		summarizeBy: none
+		sourceColumn: New Groupings
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grouping (Fr)'
+		dataType: string
+		lineageTag: 78cf2e64-cb06-4d57-811c-6551c44c50f9
+		summarizeBy: none
+		sourceColumn: Grouping (Fr)
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sector_Lookup = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("\\Phpfsbrtn01\Bureautique\Data_Analytics\Global Dashboard TB\Lookup Folder\Rawbank Sector grouping .xlsx"), null, true),
+				    Feuil1_Sheet = Source{[Item="Feuil1",Kind="Sheet"]}[Data],
+				    #"Type modifié" = Table.TransformColumnTypes(Feuil1_Sheet,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}}),
+				    #"En-têtes promus" = Table.PromoteHeaders(#"Type modifié", [PromoteAllScalars=true]),
+				    #"Type modifié1" = Table.TransformColumnTypes(#"En-têtes promus",{{"Secteur d’activité - Detailed Classification Rawbank", type text}, {"New Groupings", type text}, {"Grouping (Fr)", type text}})
+				in
+				    #"Type modifié1"
+
+	annotation PBI_ResultType = Table
+

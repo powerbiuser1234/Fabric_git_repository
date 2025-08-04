@@ -1,0 +1,178 @@
+table Targets_Agencies
+	lineageTag: 35779729-ba90-4d87-bdce-c7efa7032199
+
+	column Branch
+		dataType: string
+		lineageTag: e572e9ce-77c9-454a-91d9-d4091c646334
+		summarizeBy: none
+		sourceColumn: Branch
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 211ad455-e47c-4266-b74e-36c9cf8c4a6f
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adjoint Administartif'
+		dataType: string
+		lineageTag: 48217a71-4582-436c-a761-701f331022db
+		summarizeBy: none
+		sourceColumn: Adjoint Administartif
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adjoint Administartif User Principal'
+		dataType: string
+		lineageTag: 6b1d7129-1e63-4937-8d31-a136308407bb
+		summarizeBy: none
+		sourceColumn: Adjoint Administartif User Principal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Manager'
+		dataType: string
+		lineageTag: c67b176c-3279-41bc-a2be-20f09b1cb7d4
+		summarizeBy: none
+		sourceColumn: Branch Manager
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Branch Manager User Principal'
+		dataType: string
+		lineageTag: d4c0af4f-798f-406a-a6e0-6dc09f31c69d
+		summarizeBy: none
+		sourceColumn: Branch Manager User Principal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Deposits(Decemer 22 + ↓)'
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: aa82a772-633f-4348-9399-4efd14545523
+		summarizeBy: sum
+		sourceColumn: Deposits(Decemer 22 + ↓)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Loans(Decemer 22 + ↓)'
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 5ddb9427-dc2a-4bb2-995a-8e3c0477b7f6
+		summarizeBy: sum
+		sourceColumn: Loans(Decemer 22 + ↓)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column NPL
+		dataType: double
+		lineageTag: 8d875f25-e316-4ec0-9f28-2b25877e5fa9
+		summarizeBy: sum
+		sourceColumn: NPL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CTO
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 53e96b54-81c8-4378-873a-bb2845f97e65
+		summarizeBy: sum
+		sourceColumn: CTO
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Client Aquisition(Decemer 22 + ↓)'
+		dataType: int64
+		formatString: 0
+		lineageTag: 59332c56-9763-4203-8303-481d907a5cfd
+		summarizeBy: sum
+		sourceColumn: Client Aquisition(Decemer 22 + ↓)
+
+		annotation SummarizationSetBy = Automatic
+
+	column Packages
+		dataType: double
+		lineageTag: 67439b2a-4f0e-4156-9b75-f0d1c0d6b6a8
+		summarizeBy: sum
+		sourceColumn: Packages
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PNB
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 7e740940-a08d-4be6-bf2e-74dc59eb6d29
+		summarizeBy: sum
+		sourceColumn: PNB
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Resposible Adjoint Administartif'
+		dataType: string
+		lineageTag: a19e8d0a-945b-4948-b6fc-a270fd27eabc
+		summarizeBy: none
+		sourceColumn: Resposible Adjoint Administartif
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Resposible Adjoint Administartif User Principal'
+		dataType: string
+		lineageTag: 756c460f-caeb-4f82-8481-34883090a045
+		summarizeBy: none
+		sourceColumn: Resposible Adjoint Administartif User Principal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Director Regional'
+		dataType: string
+		lineageTag: d132684e-7faf-43b2-997a-c44ef85be207
+		summarizeBy: none
+		sourceColumn: Director Regional
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Director Regional User Principal'
+		dataType: string
+		lineageTag: 169b8844-f64b-4dd4-84ca-5d5c26969665
+		summarizeBy: none
+		sourceColumn: Director Regional User Principal
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Director Assistant'
+		dataType: string
+		lineageTag: c6a85773-0305-4751-bb70-528fd66526d5
+		summarizeBy: none
+		sourceColumn: Director Assistant
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Targets_Agencies-e6a17a23-4a78-4c66-9021-bdf0e2b1a452 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("\\Phpfsbrtn01\Bureautique\Data_Analytics\Global Dashboard TB\Targets_Agencies_2023.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Deposits#(lf)(Decemer 22 + ↓)", Currency.Type}, {"Loans#(lf)(Decemer 22 + ↓)", Currency.Type}, {"NPL", Currency.Type}, {"CTO", Currency.Type}, {"Client Aquisition#(lf)(Decemer 22 + ↓)", Int64.Type}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"NPL", type number}, {"PNB", Currency.Type}, {"Packages", type number}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+

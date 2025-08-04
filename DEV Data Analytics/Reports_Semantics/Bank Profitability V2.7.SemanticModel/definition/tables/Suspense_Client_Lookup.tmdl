@@ -1,0 +1,29 @@
+table Suspense_Client_Lookup
+	lineageTag: 7f6575a8-ae49-4821-994a-0ca8fd46b3ad
+
+	column CLIENT_ID
+		dataType: string
+		lineageTag: fcf940d2-d742-4a1a-9671-1034199fdf44
+		summarizeBy: none
+		sourceColumn: CLIENT_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column TYPE
+		dataType: string
+		lineageTag: 5c87f826-57a6-4426-bd9a-2c68d6abc5a4
+		summarizeBy: none
+		sourceColumn: TYPE
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Suspense_Client_Lookup-24ccf80b-5914-459a-9f50-9e028ad94840 = m
+		mode: import
+		source =
+				let
+				      Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select * from dmuser.DIM_SUSPENSE_CLIENT_ID"])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
