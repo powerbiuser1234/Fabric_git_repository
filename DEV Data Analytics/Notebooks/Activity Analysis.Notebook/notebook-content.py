@@ -24,7 +24,7 @@
 
 import pandas as pd
 df = pd.read_excel(f"{notebookutils.nbResPath}/builtin/My Outlook Send Items.xlsx")
-
+print(df)
 
 # METADATA ********************
 
