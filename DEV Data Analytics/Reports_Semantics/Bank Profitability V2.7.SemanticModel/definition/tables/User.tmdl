@@ -1,0 +1,21 @@
+table User
+	lineageTag: d9d2d293-a083-4661-b600-c9dd9abf43e1
+
+	column Direction
+		dataType: string
+		lineageTag: 5e916ab6-9f50-43c1-983f-575da13412b7
+		summarizeBy: none
+		sourceColumn: Direction
+
+		annotation SummarizationSetBy = Automatic
+
+	partition User-82c6543a-cf29-4610-b0f9-6f1cc7995aaa = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WckxPzUuuVIrViVZyzs/NTS1KzkzMSQXzfROLkjMOrwSzg1LTM/PzEnOgnOICPQW4dCwA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Direction = _t])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

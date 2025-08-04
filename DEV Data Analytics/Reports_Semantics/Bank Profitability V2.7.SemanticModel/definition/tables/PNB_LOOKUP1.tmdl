@@ -1,0 +1,209 @@
+table PNB_LOOKUP1
+	lineageTag: f2410a38-f457-4fc9-baad-eb961a913ccd
+
+	column 'Account No'
+		dataType: int64
+		formatString: 0
+		lineageTag: 93cf57c7-643d-4fd7-8ec7-95e2c721e544
+		summarizeBy: none
+		sourceColumn: Account No
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Account Name'
+		dataType: string
+		lineageTag: e84a574a-59d8-4c48-8226-68db0edb0e86
+		summarizeBy: none
+		sourceColumn: Account Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Défilement
+		dataType: string
+		lineageTag: 9269ff45-1fe6-4ebf-8218-3c6d01e7ad92
+		summarizeBy: none
+		sourceColumn: Défilement
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 3'
+		dataType: string
+		lineageTag: 0f06dbfe-4ff2-438f-8afd-a24b05dc8949
+		summarizeBy: none
+		sourceColumn: Composant 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 2'
+		dataType: string
+		lineageTag: 31aec5be-7d47-44cb-9d2d-95c1f9dc807e
+		summarizeBy: none
+		sourceColumn: Composant 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 1'
+		dataType: string
+		lineageTag: 40039cba-3cb0-4708-9d7b-db81d9ac3646
+		summarizeBy: none
+		sourceColumn: Composant 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 1.1'
+		dataType: string
+		lineageTag: 3da03fbb-95a5-4ec8-a346-d3e583541adf
+		summarizeBy: none
+		sourceColumn: Composant 1.1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 1.2'
+		dataType: string
+		lineageTag: 912ec8d7-a8e8-45e5-8ab9-a855e13154aa
+		summarizeBy: none
+		sourceColumn: Composant 1.2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 1.3'
+		dataType: string
+		lineageTag: 936ea4e9-8a48-4a54-8026-74bd3f6c1390
+		summarizeBy: none
+		sourceColumn: Composant 1.3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 1.4'
+		dataType: string
+		lineageTag: 2ac84ec5-5977-4b79-a528-6dc835f0e993
+		summarizeBy: none
+		sourceColumn: Composant 1.4
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Composant 1.5'
+		dataType: string
+		lineageTag: 2e806686-ea71-4b31-aef2-122b9f6a797e
+		summarizeBy: none
+		sourceColumn: Composant 1.5
+
+		annotation SummarizationSetBy = Automatic
+
+	column Direction/Department
+		dataType: string
+		lineageTag: 3d46c33c-c019-446e-a6ab-f6b525211fb7
+		summarizeBy: none
+		sourceColumn: Direction/Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Reduction-Priority Level'
+		dataType: string
+		lineageTag: a2d5f455-dfed-451e-84d6-3f3fd5dac1b2
+		summarizeBy: none
+		sourceColumn: Cost Reduction-Priority Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Reduction-Priority'
+		dataType: string
+		lineageTag: 1f9cef58-9811-422b-adaf-e2e4a0c1d969
+		summarizeBy: none
+		sourceColumn: Cost Reduction-Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Reduction-Priority (Old)'
+		dataType: string
+		lineageTag: 824efaf1-8d89-49bc-a652-4729ad2ef797
+		summarizeBy: none
+		sourceColumn: Cost Reduction-Priority (Old)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Expenses Nature (for CC report)'
+		dataType: string
+		lineageTag: 3678377c-713b-405d-acb8-4f56a7764b9e
+		summarizeBy: none
+		sourceColumn: Expenses Nature (for CC report)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nature of Expenses'
+		dataType: string
+		lineageTag: 24b3e168-ed02-43a3-88af-62276bb1aecb
+		summarizeBy: none
+		sourceColumn: Nature of Expenses
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nature of Expenses (Comments)'
+		dataType: string
+		lineageTag: 1fecd7c7-c9be-4495-9f84-d3e717cfa426
+		summarizeBy: none
+		sourceColumn: Nature of Expenses (Comments)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Allocate from HQ'
+		dataType: string
+		lineageTag: 5f64e4c1-ea67-4b76-857d-e6d171a1c847
+		summarizeBy: none
+		sourceColumn: Allocate from HQ
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Allocation Bassis'
+		dataType: string
+		lineageTag: 8918f89d-8eea-4142-a802-0d318aefc13a
+		summarizeBy: none
+		sourceColumn: Allocation Bassis
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Type for Cost Sharing (HQ)'
+		dataType: string
+		lineageTag: 5eac9b65-5864-4a35-9e93-58d547136b3e
+		summarizeBy: none
+		sourceColumn: Cost Type for Cost Sharing (HQ)
+
+		annotation SummarizationSetBy = Automatic
+
+	column ACCOUNT_HEADS_APPLICABLE
+		dataType: string
+		lineageTag: bac503fc-fc1a-4bc6-b7c4-23e250293293
+		summarizeBy: none
+		sourceColumn: ACCOUNT_HEADS_APPLICABLE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GROUPING
+		dataType: string
+		lineageTag: a36900f9-58a7-493b-ab4a-1d2c5911053d
+		summarizeBy: none
+		sourceColumn: GROUPING
+
+		annotation SummarizationSetBy = Automatic
+
+	column Group = if(PNB_LOOKUP1[GROUPING]="","OTHERS",PNB_LOOKUP1[GROUPING])
+		lineageTag: a8f0a8a4-a7da-4502-9278-f18d9730e15a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition PNB_LOOKUP1-89eb4d74-7f5b-4a46-8edb-785610a0dd10 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("\\Phpfsbrtn01\Bureautique\Public\Data Analytics\12. Misc\03. Produit Net Bancaire (Profitability par client)\Dimension tables\Maping_PNB.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Account No", Int64.Type}, {"Account Name", type text}, {"Défilement", type text}, {"Composant 3", type text}, {"Composant 2", type text}, {"Composant 1", type text}, {"Composant 1.1", type text}, {"Composant 1.2", type text}, {"Composant 1.3", type text}, {"Composant 1.4", type text}, {"Composant 1.5", type text}, {"Direction/Department", type text}, {"Cost Reduction-Priority Level", type text}, {"Cost Reduction-Priority", type text}, {"Cost Reduction-Priority (Old)", type text}, {"Expenses Nature (for CC report)", type text}, {"Nature of Expenses", type any}, {"Nature of Expenses (Comments)", type any}, {"Allocate from HQ", type any}, {"Allocation Bassis", type any}, {"Cost Type for Cost Sharing (HQ)", type any}, {"ACCOUNT_HEADS_APPLICABLE", type text}, {"GROUPING", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

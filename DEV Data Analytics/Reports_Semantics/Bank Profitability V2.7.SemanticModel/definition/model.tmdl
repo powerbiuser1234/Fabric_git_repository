@@ -1,0 +1,60 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transform File from Profitability'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from Profitability\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation PBIDesktopVersion = 2.124.1052.0 (23.12)
+
+annotation PBI_QueryOrder = ["Profitability","Parameter1","Sample File","Transform File","P&L LookUp","Client Balance","Branch_List","Suspense_Client_Lookup","Segment LookUp","ANMVT_PNL","BKAGE","SEG","PNB_LOOKUP","PNB_LOOKUP1","Query1","Targets_comm_market","Targets_regional","Targets_resp_market","Targets_Agencies","Segment_lookup1","User","Sector_Lookup","RangeStart","RangeEnd","Query2","RangeStart_1","RangeEnd_1","Query2 (2)","RangeStart_2","RangeEnd_2"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation __BNorm = 1
+
+annotation __TEdtr = 1
+
+ref table Profitability
+ref table DateTableTemplate_c47a1f51-9750-4d20-8cb9-820a7cf19a0b
+ref table 'P&L LookUp'
+ref table 'Client Balance'
+ref table Branch_List
+ref table Calender
+ref table LocalDateTable_d284190b-c8c8-4462-b539-1f2758409498
+ref table Suspense_Client_Lookup
+ref table 'Segment LookUp'
+ref table ANMVT_PNL
+ref table BKAGE
+ref table SEG
+ref table PNB_LOOKUP
+ref table PNB_LOOKUP1
+ref table Query1
+ref table LocalDateTable_83c4b285-1f23-42d8-bfe8-46407eaa5a45
+ref table LocalDateTable_e983288c-963a-4577-be28-fd116051eee4
+ref table Targets_comm_market
+ref table Targets_regional
+ref table Targets_resp_market
+ref table Targets_Agencies
+ref table Segment_lookup1
+ref table User
+ref table Sector_Lookup
+ref table LocalDateTable_de313572-70f1-4c62-888f-faf6c5dec676
+ref table LocalDateTable_d8c54c8b-dcdc-4c74-9222-fafdb3c930ef
+ref table LocalDateTable_4c6b6cef-0051-4f5f-beaa-93cc666d16f8
+ref table Query2
+ref table LocalDateTable_32d7c64d-c366-48ff-920d-64bfc9a55e62
+ref table 'Query2 (2)'
+ref table LocalDateTable_718984a5-8c08-47d5-8926-e9e6b838bf6f
+
+ref cultureInfo en-US
+

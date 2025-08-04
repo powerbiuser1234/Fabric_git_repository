@@ -1,0 +1,43 @@
+table Query1
+	lineageTag: 06dad055-ca88-4af4-9247-cc875ac7f1d4
+
+	column FRMDT
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0bb5533f-72d5-4312-b8f9-782880b4fbee
+		summarizeBy: none
+		sourceColumn: FRMDT
+
+		variation Variation
+			isDefault
+			relationship: ffc985fe-8894-4a73-bdbf-3fd55a70b26e
+			defaultHierarchy: LocalDateTable_83c4b285-1f23-42d8-bfe8-46407eaa5a45.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column TODT
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: dc2ee23f-7a87-44d5-b4b2-639fcff8b827
+		summarizeBy: none
+		sourceColumn: TODT
+
+		variation Variation
+			isDefault
+			relationship: bee3d4b2-df68-4199-b65f-aafd2d9ee00c
+			defaultHierarchy: LocalDateTable_e983288c-963a-4577-be28-fd116051eee4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Query1-c1df8292-b8b4-4b96-83ba-943442f062f7 = m
+		mode: import
+		source =
+				let
+				    Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select ADD_MONTHS((LAST_DAY(SYSDATE)+1),-2) as frmdt, ADD_MONTHS(LAST_DAY(SYSDATE), -1) as todt from dual"])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,463 @@
+table Profitability
+	lineageTag: 3625901d-e58c-4366-8c20-4359b97e92f1
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: month
+		rollingWindowPeriods: 1
+		incrementalGranularity: day
+		incrementalPeriods: 2
+		sourceExpression =
+			let
+			    Source = Oracle.Database("192.168.1.50:1521/RBKBIDB", [HierarchicalNavigation=true]),
+			    DMUSER = Source{[Schema="DMUSER"]}[Data],
+			    PROFITABILITY_MONTHLY1 = DMUSER{[Name="PROFITABILITY_MONTHLY"]}[Data],
+			    #"Filtered Rows" = Table.SelectRows(PROFITABILITY_MONTHLY1, each [DCO] >= RangeStart and [DCO] < RangeEnd)
+			in
+			    #"Filtered Rows"
+			
+			
+			//let
+			   // Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select a.*,tau.tac,round(case when a.devo='840' then a.mon else ((a.mon*tau.tac)/tau_usd.tac) end,2) cvusd,c.sec||'-'||h.lib1 sec, c.ges,c.nom from #(lf)#(lf)(select * from anmvt@dblink_tminus1_43 where DCO in (   select x EACH_DATE from (#(lf)  select add_months(trunc(sysdate,'MONTH'),-1)+rownum-1 x from all_objects#(lf)) where x<trunc(sysdate,'MONTH'))#(lf)#(lf)) a left join#(lf)---between to_date(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-2),'dd/mm/yyyy') and to_date(ADD_MONTHS(LAST_DAY(SYSDATE), -1),'dd/mm/yyyy')#(lf) (select * from bktau@dblink_tminus1_43 where  tac!=0 and dev='181') tau #(lf)    on trim(tau.dco)=trim(a.dco)  left join#(lf)#(lf)     (select * from bktau@dblink_tminus1_43 where dev='840' and tac!=0) tau_usd #(lf)     on trim(tau_usd.dco)=trim(tau.dco) and tau.tac!=0 left join#(lf)( select * from bkcli@reporting_link) c on#(lf)trim(a.cli)=trim(c.cli)#(lf)left outer join bknom h on h.ctab='071' and h.cacc=c.sec#(lf)     #(lf)  #(lf)"])
+			//in
+			   // Source
+
+	measure 'Revenue last month' = CALCULATE(SUM(Profitability[CVUSD]),'P&L LookUp'[Composant]="REVENU DES COMMISSONS",Profitability[SEN]="C")+CALCULATE(SUM(Profitability[CVUSD]),'P&L LookUp'[Composant]="INTERETS DEBITEURS",Profitability[SEN]="C")
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 7066be1a-6ebf-4cb8-ba1e-e752d20916f0
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Charges last month' = CALCULATE(SUM(Profitability[CVUSD]),'P&L LookUp'[Composant]="INTERETS CREDITEURS",Profitability[SEN]="D")+CALCULATE(SUM(Profitability[CVUSD]),'P&L LookUp'[Composant]="CHARGES LIEES AUX COMMISSIONS",Profitability[SEN]="D")
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: da15710c-8f84-4005-b4fa-f8ae96d75c89
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure PNB_last_month = [Revenue last month]-[Charges last month]
+		formatString: #,0
+		lineageTag: d8dc56e7-ca10-41f6-8afb-cb496e14b63a
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Nombre des opérations' = COUNTA('Profitability'[CLI])
+		formatString: 0
+		lineageTag: b262c233-c5b4-4128-9458-e469bffcdc63
+
+	measure 'Of the Month' = FORMAT(MAX(Profitability[DCO]),"mmm yyyy")
+		lineageTag: 0025e245-437e-4c5c-ad13-d630a4e2b0aa
+
+	measure 'Nombre des compte' = DISTINCTCOUNT(Profitability[NCC])
+		formatString: 0
+		lineageTag: 0309f381-736c-43dc-8c5f-727b12a743e4
+
+	measure 'Refreshed (Monthly) On' = format(max(Profitability[DCO]), "dd/mm/yyyy")
+		lineageTag: 62000358-64b9-46ff-bf8e-4362e782f1c7
+
+	column LIG
+		dataType: string
+		lineageTag: 8f6bd268-e8cc-4d9b-b468-ba872f30896c
+		summarizeBy: none
+		sourceColumn: LIG
+
+		annotation SummarizationSetBy = Automatic
+
+	column ORI
+		dataType: string
+		lineageTag: 150d3d08-f663-48b5-8715-985b64fd9c25
+		summarizeBy: none
+		sourceColumn: ORI
+
+		annotation SummarizationSetBy = Automatic
+
+	column AGE
+		dataType: string
+		lineageTag: 1b6a15c4-033d-4946-a648-642f99ac703b
+		summarizeBy: none
+		sourceColumn: AGE
+
+		annotation SummarizationSetBy = Automatic
+
+	column NCP
+		dataType: string
+		lineageTag: a989c26b-8aa1-430d-8b7f-658841daf731
+		summarizeBy: none
+		sourceColumn: NCP
+
+		annotation SummarizationSetBy = Automatic
+
+	column SUF
+		dataType: string
+		lineageTag: fee8353c-05f8-4ddf-a57e-c9ad0e22f7b8
+		summarizeBy: none
+		sourceColumn: SUF
+
+		annotation SummarizationSetBy = Automatic
+
+	column PIE
+		dataType: string
+		lineageTag: de660bdb-0574-4a8e-ac6a-d16eee9d27f5
+		summarizeBy: none
+		sourceColumn: PIE
+
+		annotation SummarizationSetBy = Automatic
+
+	column OPE
+		dataType: string
+		lineageTag: 8d3aa905-6d38-4363-9375-1d91badbfd6b
+		summarizeBy: none
+		sourceColumn: OPE
+
+		annotation SummarizationSetBy = Automatic
+
+	column SER
+		dataType: string
+		lineageTag: 6dace23d-af48-4150-a61c-6f0848eb9a98
+		summarizeBy: none
+		sourceColumn: SER
+
+		annotation SummarizationSetBy = Automatic
+
+	column DCO
+		dataType: dateTime
+		formatString: d mmm yy
+		lineageTag: 6afac510-72a5-496e-a739-08b205bf74c0
+		summarizeBy: none
+		sourceColumn: DCO
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column MON
+		dataType: double
+		formatString: #,0
+		lineageTag: 5157dc5e-3dbf-4b24-b243-a23bb2e239b4
+		summarizeBy: sum
+		sourceColumn: MON
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column SEN
+		dataType: string
+		lineageTag: 9b540ae0-6bfd-4b62-9d0c-8f2b1682ff95
+		summarizeBy: none
+		sourceColumn: SEN
+
+		annotation SummarizationSetBy = Automatic
+
+	column LIB
+		dataType: string
+		lineageTag: 2cafdc0c-4c07-43e3-91ef-5253decb8fa1
+		summarizeBy: none
+		sourceColumn: LIB
+
+		annotation SummarizationSetBy = Automatic
+
+	column UTI
+		dataType: string
+		lineageTag: a630eefb-d7b8-4397-91e4-c3434bbcbdc2
+		summarizeBy: none
+		sourceColumn: UTI
+
+		annotation SummarizationSetBy = Automatic
+
+	column AGEC
+		dataType: string
+		lineageTag: 0e1c1cca-01f5-47ab-a08c-e61491c2680f
+		summarizeBy: none
+		sourceColumn: AGEC
+
+		annotation SummarizationSetBy = Automatic
+
+	column NCC
+		dataType: string
+		lineageTag: 8db18f4f-39fe-42dc-8e8d-b6fba5e15c69
+		summarizeBy: none
+		sourceColumn: NCC
+
+		annotation SummarizationSetBy = Automatic
+
+	column SUC
+		dataType: string
+		lineageTag: 5cc9a199-7f4a-4886-a5e6-951664a75d34
+		summarizeBy: none
+		sourceColumn: SUC
+
+		annotation SummarizationSetBy = Automatic
+
+	column CLI
+		dataType: string
+		lineageTag: 0cf07d55-dbd8-45c3-8302-8b37f5b0dc96
+		summarizeBy: none
+		sourceColumn: CLI
+
+		annotation SummarizationSetBy = Automatic
+
+	column AFF
+		dataType: string
+		lineageTag: f599d5d2-2d91-461f-b978-07ebc1095a03
+		summarizeBy: none
+		sourceColumn: AFF
+
+		annotation SummarizationSetBy = Automatic
+
+	column CEN
+		dataType: string
+		lineageTag: b954df93-0e9b-4b72-8b01-550b3c6978fa
+		summarizeBy: none
+		sourceColumn: CEN
+
+		annotation SummarizationSetBy = Automatic
+
+	column PST
+		dataType: string
+		lineageTag: a6314477-390b-4b98-89fd-687f1c87563a
+		summarizeBy: none
+		sourceColumn: PST
+
+		annotation SummarizationSetBy = Automatic
+
+	column REPC
+		dataType: string
+		lineageTag: 18b3b2e8-e127-4bee-896d-6f3c4931a068
+		summarizeBy: none
+		sourceColumn: REPC
+
+		annotation SummarizationSetBy = Automatic
+
+	column REPO
+		dataType: string
+		lineageTag: b7287487-c211-49c3-980e-b07a8e57c85f
+		summarizeBy: none
+		sourceColumn: REPO
+
+		annotation SummarizationSetBy = Automatic
+
+	column REPP
+		dataType: string
+		lineageTag: 628fc91a-fe67-4f1e-9ebe-d1cb198ea7eb
+		summarizeBy: none
+		sourceColumn: REPP
+
+		annotation SummarizationSetBy = Automatic
+
+	column REPL
+		dataType: string
+		lineageTag: 7b132cb5-7fd3-45c9-9e6a-e845e4da698f
+		summarizeBy: none
+		sourceColumn: REPL
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMM
+		dataType: string
+		lineageTag: 4c90add0-2cbd-42c1-9ca3-376e361c7547
+		summarizeBy: none
+		sourceColumn: IMM
+
+		annotation SummarizationSetBy = Automatic
+
+	column LOT
+		dataType: string
+		lineageTag: 3b297786-06e2-4cc9-9d21-37ec56fb1ca8
+		summarizeBy: none
+		sourceColumn: LOT
+
+		annotation SummarizationSetBy = Automatic
+
+	column DEVO
+		dataType: string
+		lineageTag: ea7bdb6b-eee3-4383-a5f9-17be5e957786
+		summarizeBy: none
+		sourceColumn: DEVO
+
+		annotation SummarizationSetBy = Automatic
+
+	column REFANA
+		dataType: string
+		lineageTag: 9814febf-e3bd-4287-8aa7-d5a6b5441f4e
+		summarizeBy: none
+		sourceColumn: REFANA
+
+		annotation SummarizationSetBy = Automatic
+
+	column CPRO
+		dataType: string
+		lineageTag: eabdd0a9-20da-4466-b9b8-c10db5697b25
+		summarizeBy: none
+		sourceColumn: CPRO
+
+		annotation SummarizationSetBy = Automatic
+
+	column CPACK
+		dataType: string
+		lineageTag: a3517dc2-5ac6-4fc2-a14a-9aef963af546
+		summarizeBy: none
+		sourceColumn: CPACK
+
+		annotation SummarizationSetBy = Automatic
+
+	column PROANA
+		dataType: string
+		lineageTag: 22ed0eff-f79c-494d-b979-466264acf322
+		summarizeBy: none
+		sourceColumn: PROANA
+
+		annotation SummarizationSetBy = Automatic
+
+	column ANABUD
+		dataType: string
+		lineageTag: dfe1aa91-4061-4cb2-9780-5ef3026f20c6
+		summarizeBy: none
+		sourceColumn: ANABUD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Montant C/V USD' = Profitability[MON]/2000
+		lineageTag: bdc16c61-eb88-4f13-b4d8-811a8d6d622a
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TAC
+		dataType: double
+		lineageTag: b5264ce0-1e15-4336-b1dc-529ee517c735
+		summarizeBy: sum
+		sourceColumn: TAC
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CVUSD
+		dataType: double
+		lineageTag: 74ac1902-6231-46fc-940f-4871180f24ef
+		summarizeBy: sum
+		sourceColumn: CVUSD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Credit = if(Profitability[SEN]="C",value(Profitability[CVUSD]))
+		lineageTag: 0bbbd191-783f-4398-81e4-82e218aa41cc
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Debit = if(Profitability[SEN]="D",value(Profitability[CVUSD]))
+		lineageTag: 122cbc6a-f3fe-4a1e-9618-2018e26e6d9a
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Net_Profit = if(value(left(Profitability[NCP]))=6,value(value(Profitability[Debit])-value(Profitability[Credit])),value(value(Profitability[Credit])-value(Profitability[Debit])))
+		lineageTag: b9fa5d16-bbb0-4ac4-903c-619a971b883c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Region = related(Branch_List[Zone])
+		lineageTag: 656e9d76-8ace-46d1-a3d4-23e019e5f1a5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column SEC
+		dataType: string
+		lineageTag: 05e89fc3-3d07-4105-b34a-d86a6787561f
+		summarizeBy: none
+		sourceColumn: SEC
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sector = if(Profitability[SEC]="     -", "2000 -AUTRES ACTIVITES NON SECTORISE", Profitability[SEC])
+		lineageTag: 1f00d2ce-78ac-4ec4-86a5-fd8f5a721e2b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column GES
+		dataType: string
+		lineageTag: a5c629c8-4fa5-4581-9e9f-7357c81b5e10
+		summarizeBy: none
+		sourceColumn: GES
+
+		annotation SummarizationSetBy = Automatic
+
+	column NOM
+		dataType: string
+		lineageTag: ec7541af-70b1-455c-b7b3-a0625692599e
+		summarizeBy: none
+		sourceColumn: NOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column Branch_code_name = if(related(Branch_List[Name of the Branch])="",Profitability[AGE] ,related(Branch_List[Name of the Branch]))
+		lineageTag: df991432-2c6e-4d51-b759-3e73c226eda7
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gestionnaire = Profitability[GES] & "-" & related('Client Balance'[GES])
+		lineageTag: 0d64daae-1c8a-46a7-b1b0-b41ffe97ca5a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column = related('Segment LookUp'[SEGMENT_CODE]) & "-" & related('Segment LookUp'[MARKET])
+		lineageTag: 2f7c4bfe-5743-4ac4-9997-5d883beffd12
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column3 = related(Branch_List[Zone]) & related('Segment LookUp'[MARKET])
+		lineageTag: 09a57e6e-5cff-4a28-ad1d-722e652c2028
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Profitability = m
+		mode: import
+		source =
+				let
+				    Source = Oracle.Database("192.168.1.50:1521/RBKBIDB", [HierarchicalNavigation=true]),
+				    DMUSER = Source{[Schema="DMUSER"]}[Data],
+				    PROFITABILITY_MONTHLY1 = DMUSER{[Name="PROFITABILITY_MONTHLY"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(PROFITABILITY_MONTHLY1, each [DCO] >= RangeStart and [DCO] < RangeEnd)
+				in
+				    #"Filtered Rows"
+				
+				
+				//let
+				   // Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select a.*,tau.tac,round(case when a.devo='840' then a.mon else ((a.mon*tau.tac)/tau_usd.tac) end,2) cvusd,c.sec||'-'||h.lib1 sec, c.ges,c.nom from #(lf)#(lf)(select * from anmvt@dblink_tminus1_43 where DCO in (   select x EACH_DATE from (#(lf)  select add_months(trunc(sysdate,'MONTH'),-1)+rownum-1 x from all_objects#(lf)) where x<trunc(sysdate,'MONTH'))#(lf)#(lf)) a left join#(lf)---between to_date(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-2),'dd/mm/yyyy') and to_date(ADD_MONTHS(LAST_DAY(SYSDATE), -1),'dd/mm/yyyy')#(lf) (select * from bktau@dblink_tminus1_43 where  tac!=0 and dev='181') tau #(lf)    on trim(tau.dco)=trim(a.dco)  left join#(lf)#(lf)     (select * from bktau@dblink_tminus1_43 where dev='840' and tac!=0) tau_usd #(lf)     on trim(tau_usd.dco)=trim(tau.dco) and tau.tac!=0 left join#(lf)( select * from bkcli@reporting_link) c on#(lf)trim(a.cli)=trim(c.cli)#(lf)left outer join bknom h on h.ctab='071' and h.cacc=c.sec#(lf)     #(lf)  #(lf)"])
+				//in
+				   // Source
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_IsMQueryFoldable = True
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,29 @@
+table Query2
+	lineageTag: ab03a111-dc1a-4ef2-b793-d85426229386
+
+	column SYSDATE
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 26c36224-7e78-4562-b9e6-e30b9e28a10b
+		summarizeBy: none
+		sourceColumn: SYSDATE
+
+		variation Variation
+			isDefault
+			relationship: d7ee8e3a-114d-497a-8d82-af76e3309cf2
+			defaultHierarchy: LocalDateTable_32d7c64d-c366-48ff-920d-64bfc9a55e62.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Query2 = m
+		mode: import
+		source =
+				let
+				    Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select sysdate from dual"])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

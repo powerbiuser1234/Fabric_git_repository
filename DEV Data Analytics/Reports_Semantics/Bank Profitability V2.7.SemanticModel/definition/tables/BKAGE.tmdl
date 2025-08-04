@@ -1,0 +1,29 @@
+table BKAGE
+	lineageTag: 92dd4893-e57a-4f9f-a857-79c9ee693e27
+
+	column AGE
+		dataType: string
+		lineageTag: 31b02708-d1b3-4ddc-a506-12672cc32919
+		summarizeBy: none
+		sourceColumn: AGE
+
+		annotation SummarizationSetBy = Automatic
+
+	column LIB
+		dataType: string
+		lineageTag: 5064ae5d-80ac-4085-affd-8ee025b61f1e
+		summarizeBy: none
+		sourceColumn: LIB
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BKAGE-59e87594-0b27-4b4b-ad81-9c2dbf3b5940 = m
+		mode: import
+		source =
+				let
+				      Source = Oracle.Database("192.168.1.50:1521/rbkbidb", [HierarchicalNavigation=true, Query="select * from bkage@dblink_tminus1_43"])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
