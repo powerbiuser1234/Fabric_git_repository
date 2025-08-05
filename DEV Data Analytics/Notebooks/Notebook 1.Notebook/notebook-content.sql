@@ -44,7 +44,7 @@
 
 -- CELL ********************
 
-select CLI,NCP,AGE,DEV FROM Lakehouse.Cbs_Bkcom
+select CLI,NCP,AGE,DEV,SDE FROM Lakehouse.Cbs_Bkcom
 
 -- METADATA ********************
 
