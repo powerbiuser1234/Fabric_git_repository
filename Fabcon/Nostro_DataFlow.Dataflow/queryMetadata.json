@@ -1,0 +1,128 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {},
+  "name": "Nostro_DataFlow",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "gatewayObjectId": "4af17feb-05f1-4996-af57-6cc2074238cd",
+  "queriesMetadata": {
+    "DefaultDestination": {
+      "queryId": "0d61e56c-1038-48c9-a53a-697f11abc5b8",
+      "queryName": "DefaultDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "BACKDATED_NOSTRO": {
+      "queryId": "cf226933-c283-484d-87c2-99f8f8d771e7",
+      "queryName": "BACKDATED_NOSTRO"
+    },
+    "CORRESPONDANTACCOUNT": {
+      "queryId": "73490420-66ef-41e3-9ad5-0131807b3689",
+      "queryName": "CORRESPONDANTACCOUNT"
+    },
+    "MONITOR_NOSTRO": {
+      "queryId": "ff8cc32b-7140-42ce-93a2-a5d1221bfdd4",
+      "queryName": "MONITOR_NOSTRO"
+    },
+    "NOSTRO": {
+      "queryId": "44ae8c61-d8b5-4227-b3d1-86c441a16fda",
+      "queryName": "NOSTRO"
+    },
+    "NOSTRO_2_3": {
+      "queryId": "7e02d617-ffb6-41f6-ac17-cf932261cc3a",
+      "queryName": "NOSTRO_2_3"
+    },
+    "NOSTRO_BAL": {
+      "queryId": "886db7b7-2527-41b3-981b-dd0939d6fae4",
+      "queryName": "NOSTRO_BAL"
+    },
+    "NOSTRO_MONITOR": {
+      "queryId": "a6751bd3-aa4c-41b3-b708-c7ebee5148b2",
+      "queryName": "NOSTRO_MONITOR"
+    },
+    "NOSTRO_PART1": {
+      "queryId": "4f1da2e7-33a3-441c-9c5f-980cd900a434",
+      "queryName": "NOSTRO_PART1"
+    },
+    "NOSTRO_PART2_3": {
+      "queryId": "6da1f3cf-2475-4a14-bc69-566777c069bf",
+      "queryName": "NOSTRO_PART2_3"
+    },
+    "NOSTRO1": {
+      "queryId": "c0c7557f-beeb-498c-ba7d-94cc1aa78ab9",
+      "queryName": "NOSTRO1"
+    },
+    "BACKDATED_NOSTRO_DataDestination": {
+      "queryId": "c18f9932-d174-4bb9-86ab-5fe174c7ec98",
+      "queryName": "BACKDATED_NOSTRO_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "CORRESPONDANTACCOUNT_DataDestination": {
+      "queryId": "02ae50d5-d756-41c1-a508-388bd1276929",
+      "queryName": "CORRESPONDANTACCOUNT_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "MONITOR_NOSTRO_DataDestination": {
+      "queryId": "9bee9ed0-76fd-431f-a94e-937392a96231",
+      "queryName": "MONITOR_NOSTRO_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO_DataDestination": {
+      "queryId": "20c023bb-b114-405b-b655-acb6a8c2c7da",
+      "queryName": "NOSTRO_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO_2_3_DataDestination": {
+      "queryId": "26349c94-fa4c-4708-9ffd-2ded15002d85",
+      "queryName": "NOSTRO_2_3_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO_BAL_DataDestination": {
+      "queryId": "725187df-1b21-44ad-ad23-4afc9c8dc017",
+      "queryName": "NOSTRO_BAL_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO_MONITOR_DataDestination": {
+      "queryId": "4484fbb4-e956-4b24-8410-bf70565f514a",
+      "queryName": "NOSTRO_MONITOR_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO_PART1_DataDestination": {
+      "queryId": "c8e01ba1-942f-4930-84eb-29bcd333e483",
+      "queryName": "NOSTRO_PART1_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO_PART2_3_DataDestination": {
+      "queryId": "cfad58b4-fe58-48fd-b60a-788cab70a8d3",
+      "queryName": "NOSTRO_PART2_3_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "NOSTRO1_DataDestination": {
+      "queryId": "980d7315-4a5c-4f71-beb0-d62b1fadfbc8",
+      "queryName": "NOSTRO1_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "192.168.1.50:1521/rbkbidb",
+      "kind": "Oracle",
+      "connectionId": "{\"ClusterId\":\"4af17feb-05f1-4996-af57-6cc2074238cd\",\"DatasourceId\":\"991dfc5e-e9fd-4e5a-a634-c835b4182d97\"}"
+    },
+    {
+      "path": "Warehouse",
+      "kind": "Warehouse",
+      "connectionId": "{\"ClusterId\":\"4af17feb-05f1-4996-af57-6cc2074238cd\",\"DatasourceId\":\"d1b14139-98a9-4f1d-8c4e-ceaa1b658ebc\"}"
+    }
+  ]
+}
