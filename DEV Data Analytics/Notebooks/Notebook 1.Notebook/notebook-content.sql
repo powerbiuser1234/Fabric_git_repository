@@ -42,8 +42,7 @@
 -- CELL ********************
 
 SELECT TOP (100) [DCO],
-            [CLI],
-            [AMT_USD]
+            [CLI]
 FROM [Lakehouse].[dbo].[VW_CR_MVT_RB_FINAL]
 
 -- METADATA ********************
