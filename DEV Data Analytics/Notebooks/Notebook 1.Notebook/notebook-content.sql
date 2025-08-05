@@ -8,9 +8,9 @@
 -- META   },
 -- META   "dependencies": {
 -- META     "lakehouse": {
--- META       "default_lakehouse": "96e0ca87-80f3-4bec-92b1-b456099d09be",
--- META       "default_lakehouse_name": "RBK_Lakehouse",
--- META       "default_lakehouse_workspace_id": "d1ef06f0-6f40-4597-b69c-c056f928168c",
+-- META       "default_lakehouse": "e56ddaf5-2e15-4634-91cc-e2eb818afa61",
+-- META       "default_lakehouse_name": "Lakehouse",
+-- META       "default_lakehouse_workspace_id": "f1bde452-2399-41bc-9ba5-b3c078a190fc",
 -- META       "known_lakehouses": [
 -- META         {
 -- META           "id": "f25322d6-67e7-4494-bac9-5062093fbc49"
@@ -20,6 +20,9 @@
 -- META         },
 -- META         {
 -- META           "id": "96e0ca87-80f3-4bec-92b1-b456099d09be"
+-- META         },
+-- META         {
+-- META           "id": "e56ddaf5-2e15-4634-91cc-e2eb818afa61"
 -- META         }
 -- META       ]
 -- META     }
@@ -41,9 +44,7 @@
 
 -- CELL ********************
 
-SELECT TOP (100) [DCO],
-            [CLI]
-FROM [Lakehouse].[dbo].[VW_CR_MVT_RB_FINAL]
+select CLI,NCP,AGE,DEV FROM Lakehouse.Cbs_Bkcom
 
 -- METADATA ********************
 
